@@ -1,13 +1,19 @@
+// Game Environment
 var canvas;
 var canvasContext;
 var canvasX;
 var canvasY;
+
+// Game Managers
+var sceneManager = null;
+
 
 window.onload = function()
 {
     Init();
     Run();
 }
+
 
 /*
 ========================================================================================================================================================================================================
@@ -38,6 +44,8 @@ function Init()
     }
 
     // Setting up game managers
+    sceneManager = new SceneManager();
+    sceneManager.Init();
 }
 
 function ResizeCanvas()
@@ -63,6 +71,7 @@ function Run()
     // Updating Game Engine Info
 
     // Running Current Scene
+    sceneManager.GetCurrentScene().UpdateScene(canvas);
 
     requestAnimationFrame(Run);
 }
