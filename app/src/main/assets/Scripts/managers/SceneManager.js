@@ -1,30 +1,38 @@
-class SceneManager
+var gameScenes = [];
+var currentScene = null;
+
+function InitScenes()
 {
-    gameScenes = [];
-    currentScene = null;
+    // Loads up all the required scenes & Creates a simple dictionary for accessing loaded scenes
+    this.gameScenes[0] = new MainMenuScene();
+    this.gameScenes[1] = new GameplayScene();
+    this.gameScenes[2] = new GameOverScene();
 
-    Init()
+    for (var i = 0; i < this.gameScenes.length; i++)
     {
-        // Loads up all the required scenes & Creates a simple dictionary for accessing loaded scenes
-        this.gameScenes["MainMenu"] = new MainMenuScene();
-        this.gameScenes["Gameplay"] = new GameplayScene();
-        this.gameScenes["GameOver"] = new GameOverScene();
-
-        // Setting Starting Scene
-        this.currentScene = this.gameScenes["MainMenu"];
+        this.gameScenes[i].LoadScene();
     }
 
-    ChangeScene(sceneName)
+    // Setting Starting Scene
+    this.ChangeScene("Gameplay");
+}
+
+function ChangeScene(sceneName)
+{
+    switch (sceneName)
     {
-        this.currentScene = this.gameScenes[sceneName];
-        this.currentScene.StartScene();
+        case "MainMenu":
+            this.currentScene = this.gameScenes[0];
+            break;
+
+        case "Gameplay":
+            this.currentScene = this.gameScenes[1];
+            break;
+
+        case "GameOver":
+            this.currentScene = this.gameScenes[2];
+            break;
     }
 
-    GetCurrentScene()
-    {
-        if (this.currentScene != null)
-        {
-            return this.currentScene;
-        }
-    }
+    this.currentScene.StartScene();
 }

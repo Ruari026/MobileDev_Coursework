@@ -1,3 +1,6 @@
+// Platform
+var platformMobile = null;
+
 // Game Environment
 var canvas;
 var canvasContext;
@@ -7,6 +10,9 @@ var canvasY;
 // Game Managers
 var sceneManager = null;
 
+// Time Management
+var deltaTime = 0;
+var prevTime = 0;
 
 window.onload = function()
 {
@@ -22,6 +28,19 @@ Game Setup
 */
 function Init()
 {
+    // Checking what platform the game is being run on
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+    {
+        // true for mobile device
+        platformMobile = true;
+    }
+    else
+    {
+        // false for not mobile device
+        platformMobile = false;
+    }
+
+
     // Getting the environment to render to
     canvas = document.getElementById('gameCanvas');
     canvasContext = canvas.getContext('2d');
@@ -34,18 +53,24 @@ function Init()
         window.addEventListener('resize', ResizeCanvas, false);
         window.addEventListener('orientationchange', ResizeCanvas, false);
 
-        //canvas.addEventListener('touchstart', touchDown, false);
-        //canvas.addEventListener('touchmove', touchXY, false);
-        //canvas.addEventListener('touchend', touchUp, false);
+        // Listening for touch input
+        canvas.addEventListener('touchstart', GetTouchDown, false);
+        canvas.addEventListener('touchmove', GetTouchUpdate, false);
+        canvas.addEventListener('touchend', GetTouchUp, false);
+        document.body.addEventListener('touchcancel', GetTouchUp, false);
 
-        //document.body.addEventListener('touchcancel', touchUp, false);
+        // Listening for mouse input
+        canvas.addEventListener('mousedown', GetTouchDown, false);
+        canvas.addEventListener('mousemove', GetTouchUpdate, false);
+        canvas.addEventListener('mouseup', GetTouchUp, false);
+        //document.body.addEventListener('touchcancel', GetTouchUp, false);
 
         ResizeCanvas();
     }
 
-    // Setting up game managers
-    sceneManager = new SceneManager();
-    sceneManager.Init();
+    // Starting Game Info
+    prevTime = Date.now();
+    InitScenes();
 }
 
 function ResizeCanvas()
@@ -68,10 +93,13 @@ function Run()
     // Clearing Screen
     canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Updating Game Engine Info
+    // Calculating Game Info
+    deltaTime = ((Date.now() - this.prevTime) / 1000);
+    prevTime = Date.now();
 
     // Running Current Scene
-    sceneManager.GetCurrentScene().UpdateScene(canvas);
+    currentScene.UpdateScene();
 
+    // Looping Game Logic
     requestAnimationFrame(Run);
 }
