@@ -3,16 +3,18 @@ class PhysicsMovement extends Component
     componentName = "PhysicsMovement";
 
     // Object Details
-    mass = 0.4;
+    mass = 1;
+    friction = 0.5;
 
     // World Forces
-    gravity = -98.1;
-    airResistance = 0.1;
+    gravity = -400;
+    airResistance = 0.2;
     windSpeed = 0;
 
     // Movement Details
     speedX = 1;
     speedY = 0;
+    isGrounded = true;
 
     collisionEvent = null;
 
@@ -107,16 +109,31 @@ class PhysicsMovement extends Component
             //console.info('Angle: ' + angle);
 
             // Reflecting object velocity
-            if ((angle > 45) && (angle < 135))
+            if (angle <= 45)
             {
-                // Reflect on X-Axis
-                this.speedX *= -1;
-            }
-            else
-            {
+                // Collision is occurring below the object
+                // Prevent windspeed from affecting the object
+                this.isGrounded = true;
                 // Reflect on Y-Axis
-                this.speedY *= -1;
+                this.speedY *= (-this.friction / 2);
             }
+            else if ((angle > 45) && (angle < 135))
+            {
+                // Collision is occurring on the left or right of the object
+                // Reflect on X-Axis
+                this.speedX *= -this.friction;
+                while ((this.speedX < 10) && (this.speedX > -10))
+                {
+                    this.speedX *= 2;
+                }
+            }
+            else if (angle >= 135)
+            {
+                // Collision is occurring above the object
+                // Reflect on Y-Axis
+                this.speedY *= -this.friction;
+            }
+
 
             // Handling any other necessary collision behaviour
             if (this.collisionEvent != null)
@@ -127,10 +144,13 @@ class PhysicsMovement extends Component
             // Returns the GameObject's position to what it was before to prevent the gameobject from getting stuck inside colliders
             this.parentGameObject.SetGlobalPos({x : oldXPos, y: oldYPos});
         }
-        // Otherwise no collision, Sets new GameObject's position to be the new position
         else
         {
+            // Otherwise no collision, Sets new GameObject's position to be the new position
             this.parentGameObject.SetGlobalPos({x : newXPos, y: newYPos});
+
+            // Also object can no longer be considered grounded
+            this.isGrounded = false;
         }
     }
 
@@ -143,12 +163,13 @@ class PhysicsMovement extends Component
     CalculateXPosition()
     {
         var newPosition = 0;
+        var windStrength = this.isGrounded ? 0 : this.windSpeed;
 
-        newPosition += ((this.parentGameObject.posX) - (((this.mass * this.speedX) - ((this.windSpeed * this.mass) / (this.airResistance))) / (-this.airResistance)));
+        newPosition += ((this.parentGameObject.posX) - (((this.mass * this.speedX) - ((windStrength * this.mass) / (this.airResistance))) / (-this.airResistance)));
 
-        newPosition += ((((this.mass * this.speedX) - ((this.windSpeed * this.mass) / (this.airResistance))) / (-this.airResistance)) * (Math.exp((-this.airResistance * deltaTime) / (this.mass))));
+        newPosition += ((((this.mass * this.speedX) - ((windStrength * this.mass) / (this.airResistance))) / (-this.airResistance)) * (Math.exp((-this.airResistance * deltaTime) / (this.mass))));
 
-        newPosition += ((this.windSpeed * deltaTime) / (this.airResistance));
+        newPosition += ((windStrength * deltaTime) / (this.airResistance));
 
         return newPosition;
     }
@@ -175,12 +196,13 @@ class PhysicsMovement extends Component
     CalculateXSpeed()
     {
         var newSpeed = 0;
+        var windStrength = this.isGrounded ? 0 : this.windSpeed;
 
         newSpeed += (-this.airResistance / this.mass);
-        newSpeed *= (((this.mass * this.speedX) - ((this.windSpeed * this.mass) / (this.airResistance))) / (-this.airResistance));
+        newSpeed *= (((this.mass * this.speedX) - ((windStrength * this.mass) / (this.airResistance))) / (-this.airResistance));
         newSpeed *= (Math.exp((-this.airResistance * deltaTime) / (this.mass)));
 
-        newSpeed += (this.windSpeed / this.airResistance);
+        newSpeed += (windStrength / this.airResistance);
 
         return newSpeed;
     }

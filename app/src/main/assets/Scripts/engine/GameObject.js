@@ -195,7 +195,7 @@ class GameObject
 
         for (var i = 0; i < this.objectComponents.length; i++)
         {
-            if (this.objectComponents[i].componentName = componentName)
+            if (this.objectComponents[i].componentName == componentName)
             {
                 component = this.objectComponents[i];
             }

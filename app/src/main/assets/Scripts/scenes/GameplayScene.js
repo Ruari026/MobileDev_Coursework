@@ -18,7 +18,7 @@ class GameplayScene extends GameScene
 
         // Parallax Background
         var background = new GameObject("Background", this);
-        background.SetGlobalPos({'x' : 0, 'y' : -75});
+        background.SetGlobalPos({'x' : 0, 'y' : -0});
         background.width = 750;
         background.height = 750;
 
@@ -60,46 +60,11 @@ class GameplayScene extends GameScene
         newPlatform.posX = 300;
         //newPlatform.posY = 150;
         this.sceneObjects.push(newPlatform);
-
-
-        /*// Adding Testing Wall
-        var platformHeight = 15;
-        var platformWidth = 30;
-        var platformX = 112.5;
-        var platformY = -200;
-        for (var h = 1; h <= platformHeight; h++)
-        {
-            for (var w = 1; w <= platformWidth; w++)
-            {
-                var newTile = new GameObject("Tile", this);
-
-                // Dimensions
-                newTile.width = 25;
-                newTile.height = 25;
-
-                // Position
-                newTile.SetLocalPos(
-                {
-                    'x' : (((newTile.width + 5) * (w - 1)) + platformX),
-                    'y' : (((newTile.height + 5) * (h - 1)) + platformY)
-                });
-
-                // Renderer
-                var newRenderer = new SpriteRenderer(newTile);
-                newRenderer.filePath = 'Images/Platforms_TileSheet.png';
-                newRenderer.offsetX = 64
-                newRenderer.offsetY = 64;
-                newTile.AddRenderer(newRenderer);
-
-                //testObject.children.push(newTile);
-                this.sceneObjects.push(newTile);
-            }
-        }*/
         }
 
         // Adding player character to the scene
         var frog1 = new PlayerFrog("Player 1", this);
-        frog1.SetGlobalPos({'x' : 0, 'y' : 120});
+        frog1.SetGlobalPos({'x' : 0, 'y' : 125});
         this.sceneObjects.push(frog1);
 
         /*
@@ -144,7 +109,7 @@ class GameplayScene extends GameScene
         buttonController = new ButtonComponent(jumpButton);
         buttonController.targetRenderer = buttonRenderer;
         buttonController.buttonBehaviour = JumpButtonEvent;
-        buttonController.buttonBehaviour.targetPhysicsMovement = frog1.GetComponent("PhysicsMovement");
+        buttonController.buttonBehaviour.targetFrog = frog1;
         jumpButton.AddComponent(buttonController);
 
         this.sceneObjects.push(jumpButton);

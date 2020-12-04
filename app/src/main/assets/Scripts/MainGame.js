@@ -12,6 +12,7 @@ var sceneManager = null;
 
 // Time Management
 var deltaTime = 0;
+var maxDeltaTime = 0.02;
 var prevTime = 0;
 
 window.onload = function()
@@ -95,6 +96,10 @@ function Run()
 
     // Calculating Game Info
     deltaTime = ((Date.now() - this.prevTime) / 1000);
+    if (deltaTime > maxDeltaTime)
+    {
+        deltaTime = maxDeltaTime;
+    }
     prevTime = Date.now();
 
     // Running Current Scene

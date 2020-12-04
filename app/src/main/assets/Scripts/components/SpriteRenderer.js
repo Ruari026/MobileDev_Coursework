@@ -11,6 +11,9 @@ class SpriteRenderer extends Component
     offsetX = 0;
     offsetY = 0;
 
+    spriteRotation = 0;
+    rotationOffset = 0;
+
     img = new Image();
 
     // Sprite Animation Details
@@ -27,6 +30,7 @@ class SpriteRenderer extends Component
     Start()
     {
         this.img.src = this.filePath;
+        this.img.style.transform = 'rotate(90deg)'
     }
 
     Update()
@@ -49,23 +53,35 @@ class SpriteRenderer extends Component
     Draw(camera)
     {
         // Getting the gameobject's position & size relative to the camera
-        var screenPosX = (this.parentGameObject.GetGlobalPos().x - (this.parentGameObject.width / 2));
-        var screenPosY = (this.parentGameObject.GetGlobalPos().y - (this.parentGameObject.height / 2));
+        var spriteCenter =
+        {
+            x : (this.parentGameObject.GetGlobalPos().x * camera.zoom) + canvasX,
+            y : (this.parentGameObject.GetGlobalPos().y * camera.zoom) + canvasY
+        }
 
-        // Adjusting position & size for the orthographic camera zoom
-        screenPosX *= camera.zoom;
-        screenPosY *= camera.zoom;
+        /// Canvas Transformation for rotated sprites (Only Required if rotation is not 0)
+        if (this.spriteRotation != 0)
+        {
+            canvasContext.translate(spriteCenter.x, spriteCenter.y);
+            canvasContext.rotate((this.spriteRotation + this.rotationOffset) * Math.PI / 180);
+            canvasContext.translate(-spriteCenter.x, -spriteCenter.y);
+        }
 
-        // Setting Canvas Position
-        screenPosX += canvasX;
-        screenPosY += canvasY;
+        // Adjusting position to set draw pos relative to sprite size
+        var screenPosX = spriteCenter.x - ((this.parentGameObject.width / 2) * camera.zoom);
+        var screenPosY = spriteCenter.y - ((this.parentGameObject.height / 2) * camera.zoom);
 
-        var screenSpaceWidth = this.parentGameObject.width;
-        var screenSpaceHeight = this.parentGameObject.height;
-
-        screenSpaceWidth *= camera.zoom;
-        screenSpaceHeight *= camera.zoom;
+        var screenSpaceWidth = this.parentGameObject.width * camera.zoom;
+        var screenSpaceHeight = this.parentGameObject.height * camera.zoom;
 
         canvasContext.drawImage(this.img, (this.spriteWidth * 0) + this.offsetX, (this.spriteHeight * this.currentFrame) + this.offsetY, this.spriteWidth, this.spriteHeight, screenPosX, screenPosY, screenSpaceWidth, screenSpaceHeight);
+
+        /// Canvas Transformation for rotated sprites (only required if rotation is not 0)
+        if (this.spriteRotation != 0)
+        {
+            canvasContext.translate(spriteCenter.x, spriteCenter.y);
+            canvasContext.rotate((-this.spriteRotation - this.rotationOffset) * Math.PI / 180);
+            canvasContext.translate(-spriteCenter.x, -spriteCenter.y);
+        }
     }
 }
