@@ -8,10 +8,6 @@ class PlayerFrog extends GameObject
         this.width = 50;
         this.height = 50;
 
-        // Physics
-        var physicsHandler = new PhysicsMovement(this);
-        this.AddComponent(physicsHandler);
-
         // Collider
         var newCollider = new BoxCollider(this);
         newCollider.sizeX = 45;
@@ -29,10 +25,23 @@ class PlayerFrog extends GameObject
         newRenderer.maxFrames = 2;
         this.AddRenderer(newRenderer);
 
+        // Power Level UI (Exists in world space as child of frog)
+        var powerGameObject = new GameObject('Power', scene);
+        // Transform
+        powerGameObject.parentObject = this;
+        powerGameObject.width = 50;
+        powerGameObject.height = 50;
+        powerGameObject.SetLocalPos({x : 0, y : -25});
+        // Rendering
+        newRenderer = new SpriteRenderer(powerGameObject);
+        newRenderer.filePath = 'Images/power.png';
+        newRenderer.rotationOffset = 45;
+        newRenderer.offsetY = (64 * 5);
+        powerGameObject.AddRenderer(newRenderer);
+
         // Targeting UI (Exists in world space as child of frog)
         var targetGameObject = new GameObject('Target', scene);
         // Transform
-        targetGameObject.active = false;
         targetGameObject.parentObject = this;
         targetGameObject.width = 25;
         targetGameObject.height = 25;
@@ -41,12 +50,26 @@ class PlayerFrog extends GameObject
         newRenderer = new SpriteRenderer(targetGameObject);
         newRenderer.filePath = 'Images/crosshairs.png';
         targetGameObject.AddRenderer(newRenderer);
+
         // Button
         var buttonController = new ButtonComponent(targetGameObject);
         buttonController.targetRenderer = newRenderer;
         buttonController.buttonBehaviour = TargetButtonEvent;
+        buttonController.isScreenSpace = false;
         targetGameObject.AddComponent(buttonController);
 
+        // Controller
+        var frogController = new PlayerController(this);
+        frogController.theReticle = targetGameObject;
+        frogController.thePowerMeter = powerGameObject;
+        buttonController.buttonBehaviour.targetFrog = this;
+        this.AddComponent(frogController);
+
+        // Physics
+        var physicsHandler = new PhysicsMovement(this);
+        this.AddComponent(physicsHandler);
+
         this.children.push(targetGameObject);
+        this.children.push(powerGameObject);
     }
 }

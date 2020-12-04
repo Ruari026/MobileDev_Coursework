@@ -5,11 +5,20 @@ class ButtonComponent extends Component
     targetRenderer = null;
 
     buttonPressed = false;
+    isScreenSpace = true;
 
     lastXPos = 0;
     lastYPos = 0;
 
     buttonBehaviour = null;
+
+    Update()
+    {
+        if (this.buttonPressed)
+        {
+            this.buttonBehaviour.OnHold(this.lastXPos, this.lastYPos);
+        }
+    }
 
     Input(event)
     {
@@ -28,7 +37,7 @@ class ButtonComponent extends Component
             }
 
             // Checking if the mouse is in the rect of the button
-            if (this.IsWithinRect(this.lastXPos, this.lastYPos))
+            if (this.isScreenSpace ? this.IsWithinRectScreen(this.lastXPos, this.lastYPos) : this.IsWithinRectWorld(this.lastXPos, this.lastYPos))
             {
                 //console.info('Button Pressed')
                 this.buttonPressed = true;
@@ -61,9 +70,9 @@ class ButtonComponent extends Component
 
         if (event.type == 'touchend' || event.type == 'mouseup')
         {
-            if (this.buttonBehaviour != null)
+            if (this.buttonBehaviour != null && this.buttonPressed)
             {
-                this.buttonBehaviour.OnClick();
+                this.buttonBehaviour.OnClick(this.lastXPos, this.lastYPos);
             }
 
             // If the button was pressed return to normal state
@@ -78,13 +87,47 @@ class ButtonComponent extends Component
         }
     }
 
-    IsWithinRect(inputX, inputY)
+    IsWithinRectScreen(inputX, inputY)
     {
+        var rectMin =
+        {
+            x : (((canvas.width * this.parentGameObject.anchorX) + this.parentGameObject.posX) - (this.parentGameObject.width / 2)),
+            y : (((canvas.height * this.parentGameObject.anchorY) + this.parentGameObject.posY) - (this.parentGameObject.height / 2))
+        };
+
         // Checking X Axis
-        if((inputX > (((canvas.width * this.parentGameObject.anchorX) + this.parentGameObject.posX) - (this.parentGameObject.width / 2))) && (inputX < (((canvas.width * this.parentGameObject.anchorX) + this.parentGameObject.posX) + (this.parentGameObject.width / 2))))
+        if((inputX > rectMin.x) && (inputX < rectMin.x + this.parentGameObject.width))
         {
             // Checking Y Axis
-            if((inputY > (((canvas.height * this.parentGameObject.anchorY) + this.parentGameObject.posY) - (this.parentGameObject.height / 2))) && (inputY < (((canvas.height * this.parentGameObject.anchorY) + this.parentGameObject.posY) + (this.parentGameObject.height / 2))))
+            if((inputY > rectMin.y) && (inputY < rectMin.y + this.parentGameObject.height))
+            {
+                //console.info('Within Rect')
+                return true;
+            }
+        }
+
+        // Otherwise input was not within button rect
+        //console.info('Outside Rect')
+        return false;
+    }
+
+    IsWithinRectWorld(inputX, inputY)
+    {
+        // Rect in world space
+        var rectMin =
+        {
+            x : (this.parentGameObject.GetGlobalPos().x - (this.parentGameObject.width / 2)) * this.parentGameObject.parentScene.sceneCamera.zoom,
+            y : (this.parentGameObject.GetGlobalPos().y - (this.parentGameObject.height / 2)) * this.parentGameObject.parentScene.sceneCamera.zoom
+        };
+        // Getting Screen Space Pos
+        rectMin.x += canvasX;
+        rectMin.y += canvasY;
+
+        // Checking X Axis
+        if((inputX > rectMin.x) && (inputX < rectMin.x + (this.parentGameObject.width * this.parentGameObject.parentScene.sceneCamera.zoom)))
+        {
+            // Checking Y Axis
+            if((inputY > rectMin.y) && (inputY < rectMin.y + (this.parentGameObject.height * this.parentGameObject.parentScene.sceneCamera.zoom)))
             {
                 //console.info('Within Rect')
                 return true;
@@ -105,12 +148,12 @@ Individual Button Behaviours
 */
 var CameraButtonEvent =
 {
-    OnHold : function()
+    OnHold : function(inputX, inputY)
     {
 
     },
 
-    OnClick : function()
+    OnClick : function(inputX, inputY)
     {
         console.info("Changing Camera View");
     }
@@ -118,51 +161,69 @@ var CameraButtonEvent =
 
 var JumpButtonEvent =
 {
-    targetPhysicsMovement : null,
+    targetFrog : null,
 
-    OnHold : function()
+    OnHold : function(inputX, inputY)
     {
-
+        if (this.targetFrog != null)
+        {
+            this.targetFrog.GetComponent("PlayerController").Charge();
+        }
     },
 
-    OnClick : function()
+    OnClick : function(inputX, inputY)
     {
-        if (this.targetPhysicsMovement != null)
+        if (this.targetFrog != null)
         {
             console.info("Frog Jumping");
-            this.targetPhysicsMovement.speedX += 2500;
-            this.targetPhysicsMovement.speedY -= 2500;
+            this.targetFrog.GetComponent("PlayerController").Jump();
+            //this.targetPhysicsMovement.speedX += 2500;
+            //this.targetPhysicsMovement.speedY -= 2500;
         }
         else
         {
-            console.error("ERROR: Target Physics Controller Has Not Been Assigned");
+            console.error("ERROR: Target Frog Has Not Been Assigned");
         }
     }
 }
 
 var TargetButtonEvent =
 {
-    OnHold : function()
-    {
+    targetFrog : null,
 
+    OnHold : function(inputX, inputY)
+    {
+        //console.info("Changing Target Angle");
+        this.targetFrog.GetComponent("PlayerController").Aim(inputX, inputY);
     },
 
-    OnClick : function()
+    OnClick : function(inputX, inputY)
     {
-        console.info("Changing Target Angle");
+
     }
 }
 
 var FireButtonEvent =
 {
-    OnHold : function()
+    OnHold : function(inputX, inputY)
     {
-
+        if (this.targetFrog != null)
+        {
+            this.targetFrog.GetComponent("PlayerController").Charge();
+        }
     },
 
-    OnClick : function()
+    OnClick : function(inputX, inputY)
     {
-        console.info("Frog Firing");
+        if (this.targetFrog != null)
+        {
+            console.info("Frog Firing");
+            this.targetFrog.GetComponent("PlayerController").Fire();
+        }
+        else
+        {
+            console.error("ERROR: Target Frog Has Not Been Assigned");
+        }
     }
 }
 
@@ -171,12 +232,12 @@ var WindButtonEvent =
     windUIRenderer : null,
     windLevel : 0,
 
-    OnHold : function()
+    OnHold : function(inputX, inputY)
     {
 
     },
 
-    OnClick : function()
+    OnClick : function(inputX, inputY)
     {
         if (this.windUIRenderer != null)
         {
