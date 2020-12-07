@@ -10,6 +10,11 @@ class PlayerController extends Component
     // Targeting power details
     thePowerMeter = null;
     powerRotationOffset = 45;
+    currentPowerLevel = 1;
+    maxPowerLevel = 6;
+    currentChargeTime = 0;
+    maxChargeTime = 0.25;
+
 
     Start()
     {
@@ -63,18 +68,66 @@ class PlayerController extends Component
         var angle = Math.atan2(((direction.x * up.x) + (direction.y * up.y)), ((direction.x * up.y) + (up.x * direction.y)))
         angle *= (180 / Math.PI);
         this.thePowerMeter.GetRenderer().spriteRotation = angle;
+
+        // Flipping player sprite to follow target direction
+        if (angle > 90 || angle < -90)
+        {
+            this.parentGameObject.GetRenderer().flipX = true;
+        }
+        else
+        {
+            this.parentGameObject.GetRenderer().flipX = false;
+        }
     }
+
 
     /*
     ====================================================================================================
-    Handling Jumping & Firing
+    Handling Charging
     ====================================================================================================
     */
     Charge()
     {
+        // Showing relevant UI elements
+        this.theReticle.active = false;
+        this.thePowerMeter.active = true;
 
+        // Charging
+        this.currentChargeTime += deltaTime;
+        if (this.currentChargeTime >= this.maxChargeTime)
+        {
+            this.currentChargeTime = 0;
+            this.currentPowerLevel++;
+
+            // Capping max power level
+            if (this.currentPowerLevel > this.maxPowerLevel)
+            {
+                this.currentPowerLevel = this.maxPowerLevel;
+            }
+
+            // Updating power meter sprite
+            var newOffset = (this.thePowerMeter.GetRenderer().spriteHeight * (this.currentPowerLevel - 1));
+            this.thePowerMeter.GetRenderer().offsetY = newOffset;
+        }
     }
 
+    ResetCharge()
+    {
+        this.thePowerMeter.active = false;
+
+        this.thePowerMeter.GetRenderer().offsetY = 0;
+        this.currentChargeTime = 0;
+        this.currentPowerLevel = 1;
+
+        this.theReticle.active = true;
+    }
+
+
+    /*
+    ====================================================================================================
+    Resolving Jumping & Firing
+    ====================================================================================================
+    */
     Jump()
     {
         // Direction determined by reticle direction
@@ -84,19 +137,37 @@ class PlayerController extends Component
 
         // Adding force to player physics handler
         var physicsHandler = this.parentGameObject.GetComponent("PhysicsMovement");
-        physicsHandler.speedX += (direction.x * 500);
-        physicsHandler.speedY += (direction.y * 500);
+        physicsHandler.speedX += (direction.x * 125 * this.currentPowerLevel);
+        physicsHandler.speedY += (direction.y * 125 * this.currentPowerLevel);
 
         // Reset Charge Meter
+        this.ResetCharge();
     }
 
     Fire()
     {
+        // Direction determined by reticle direction
+        var direction = this.theReticle.GetLocalPos();
+        direction.x /= this.reticleOffsetMagnitude;
+        direction.y /= this.reticleOffsetMagnitude;
+
+        // Creating New Projectile
+        var newProjectile = new ProjectilePrefab('Projectile', this.parentGameObject.parentScene);
+        newProjectile.GetComponent('PhysicsMovement').layersToIgnore.push(this.parentGameObject.gameObjectName);
+        newProjectile.GetComponent("PhysicsMovement").speedX += (direction.x * 125 * this.currentPowerLevel);
+        newProjectile.GetComponent("PhysicsMovement").speedY += (direction.y * 125 * this.currentPowerLevel);
+
+        // Moving the projectile to where the frog is (plus a bit of offset in the target direction)
+        newProjectile.SetGlobalPos(
+        {
+            x : this.parentGameObject.GetGlobalPos().x,
+            y : this.parentGameObject.GetGlobalPos().y
+        });
+
+        // Adding new projectile to scene
+        this.parentGameObject.parentScene.AddObject(newProjectile);
+
         // Reset Charge Meter
-    }
-
-    ResetCharge()
-    {
-
+        this.ResetCharge();
     }
 }

@@ -11,7 +11,7 @@ class WallPrefab extends GameObject
         {
             for (var w = 1; w <= this.platformWidth; w++)
             {
-                var newTile = new GameObject('Tile', this);
+                var newTile = new GameObject('Tile', scene);
 
                 // Dimensions
                 newTile.width = 25;

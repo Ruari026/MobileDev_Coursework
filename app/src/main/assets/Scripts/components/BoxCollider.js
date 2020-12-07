@@ -2,6 +2,8 @@ class BoxCollider extends Component
 {
     componentName = "BoxCollider";
 
+    colliderLayer = '';
+
     offsetX = 0;
     offsetY = 0;
 

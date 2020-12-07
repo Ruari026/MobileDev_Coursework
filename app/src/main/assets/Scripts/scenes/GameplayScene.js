@@ -1,5 +1,9 @@
 class GameplayScene extends GameScene
 {
+    // Scene Specific Details
+    sceneGravity = -400;
+    windSpeed = (75 * 4);
+
     LoadScene()
     {
         this.sceneName = 'Gameplay';
@@ -13,6 +17,7 @@ class GameplayScene extends GameScene
         {
         // Every scene needs a camera
         var newCamera = new CameraPrefab("Camera", this);
+        newCamera.SetGlobalPos({'x' : -0, 'y' : -0});
         this.sceneCamera = newCamera;
         this.sceneObjects.push(newCamera);
 
@@ -62,9 +67,9 @@ class GameplayScene extends GameScene
         this.sceneObjects.push(newPlatform);
         }
 
-        // Adding player character to the scene
+        // Adding player characters to the scene
         var frog1 = new PlayerFrog("Player 1", this);
-        frog1.SetGlobalPos({'x' : 0, 'y' : 125});
+        frog1.SetGlobalPos({x : -150, y : -75});
         this.sceneObjects.push(frog1);
 
         /*
@@ -130,6 +135,7 @@ class GameplayScene extends GameScene
         buttonController = new ButtonComponent(fireButton);
         buttonController.targetRenderer = buttonRenderer;
         buttonController.buttonBehaviour = FireButtonEvent;
+        buttonController.buttonBehaviour.targetFrog = frog1;
         fireButton.AddComponent(buttonController);
 
         this.sceneObjects.push(fireButton);
@@ -153,6 +159,7 @@ class GameplayScene extends GameScene
         buttonController.targetRenderer = buttonRenderer;
         buttonController.buttonBehaviour = WindButtonEvent;
         buttonController.buttonBehaviour.windUIRenderer = buttonRenderer;
+        buttonController.buttonBehaviour.targetScene = this;
         windButton.AddComponent(buttonController);
 
         this.sceneObjects.push(windButton);

@@ -4,6 +4,9 @@ class GameScene
     sceneObjects = [];
     sceneCamera = null;
 
+    objectsToBeAdded = [];
+    objectsToBeDestroyed = [];
+
     LoadScene()
     {
         // Intended to be overridden in extended classes
@@ -32,6 +35,55 @@ class GameScene
         {
             this.sceneObjects[i].RenderObject(this.sceneCamera);
         }
+
+        // Ensuring that any objects to be added to the scene are done so outside of the update & render loop
+        for (i = 0; i < this.objectsToBeAdded.length; i++)
+        {
+            // Setting up new object
+            this.objectsToBeAdded[i].StartObject();
+
+            // Adding new object to scene memory
+            this.sceneObjects.push(this.objectsToBeAdded[i]);
+        }
+        // Resetting addition list
+        this.objectsToBeAdded = [];
+
+
+        // Ensuring that any objects to be removed from the scene are done so outside of the update & render loop
+        for (i = 0; i < this.objectsToBeDestroyed.length; i++)
+        {
+            // Checking if object is at the root of the scene or is a child of another gameobject
+            var isChild = (this.objectsToBeDestroyed[i].parentObject != null);
+
+            // If it is a child then the object just needs to be removed from it's parent's children list
+            if (isChild)
+            {
+                // Gets index of object from parent's children
+                var index = this.objectsToBeDestroyed[i].parentObject.children.map(function(item){return item}).indexOf(this.objectsToBeDestroyed[i]);
+                console.info("Destroying Object At: " + index + ", Scene Object Count: " + this.sceneObjects.length);
+
+                // Object my have specific behaviour to run before being destroyed
+                this.objectsToBeDestroyed[i].EndObject();
+
+                // Removing object from parent's children array
+                this.objectsToBeDestroyed[i].parentObject.children.splice(index, 1);
+                this.objectsToBeDestroyed[i].parentObject = null;
+            }
+            // Otherwise the object is at the root of the scene so just needs to be removed from the scene's objects
+            else
+            {
+                // Gets index of object from base scene objects
+                var index = this.sceneObjects.map(function(item){return item}).indexOf(this.objectsToBeDestroyed[i]);
+
+                // Object my have specific behaviour to run before being destroyed
+                this.objectsToBeDestroyed[i].EndObject();
+
+                // Removing object from base scene objects array
+                this.sceneObjects.splice(index, 1);
+            }
+        }
+        // Resetting destruction list
+        this.objectsToBeDestroyed = [];
     }
 
     InputScene(event)
@@ -59,20 +111,28 @@ class GameScene
         return sceneColliders;
     }
 
-    CreateObject(newObject)
+    AddObject(newObject)
     {
-        // Setting up new object
-
-        // Adding new object to scene memory
-        this.sceneObjects.push(newObject);
+        this.objectsToBeAdded.push(newObject);
     }
 
     DestroyObject(objectToDestroy)
     {
-        // Cleaning up object specific details
-        objectToDestroy.EndObject();
+        // Checking that the requested object hasn't already been requested to be destroyed
+        var alreadyAdded = false;
+        for (var i = 0; i < this.objectsToBeDestroyed.length; i++)
+        {
+            if (objectToDestroy == this.objectsToBeDestroyed[i])
+            {
+                alreadyAdded = true;
+            }
+        }
 
-        // Removing object from scene memory
+        // If not then add the object (will be handled at the end of the scenes update loop)
+        if (!alreadyAdded)
+        {
+            this.objectsToBeDestroyed.push(objectToDestroy);
+        }
     }
 }
 

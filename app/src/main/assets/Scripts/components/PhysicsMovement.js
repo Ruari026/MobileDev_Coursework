@@ -5,17 +5,16 @@ class PhysicsMovement extends Component
     // Object Details
     mass = 1;
     friction = 0.5;
-
-    // World Forces
-    gravity = -400;
+    groundResistance = 5;
     airResistance = 0.2;
-    windSpeed = 0;
 
     // Movement Details
     speedX = 1;
     speedY = 0;
     isGrounded = true;
 
+    // Specific collision details
+    layersToIgnore = [];
     collisionEvent = null;
 
     Start()
@@ -48,8 +47,22 @@ class PhysicsMovement extends Component
         var broadPhaseColliders = [];
         for (var i = 0; i < sceneColliders.length; i++)
         {
+            var isSuitable = true;
+
             // Obviously dont want the collider to check if it is colliding with itself
-            if (sceneColliders[i] != this.parentGameObject.objectCollider)
+            if (sceneColliders[i] == this.parentGameObject.objectCollider)
+            {
+                isSuitable = false;
+            }
+
+            // Also excludes any colliders that are on layers that this object wants to ignore
+            if (this.layersToIgnore.includes(sceneColliders[i].colliderLayer))
+            {
+                isSuitable = false;
+            }
+
+            // If it doesn't meet any of the above conditions then specific collision checks can happen
+            if (isSuitable)
             {
                 broadPhaseColliders.push(sceneColliders[i]);
             }
@@ -138,7 +151,7 @@ class PhysicsMovement extends Component
             // Handling any other necessary collision behaviour
             if (this.collisionEvent != null)
             {
-                this.collisionEvent.OnCollision(mostRelevantCollider);
+                this.collisionEvent.OnCollision(mostRelevantCollider, this);
             }
 
             // Returns the GameObject's position to what it was before to prevent the gameobject from getting stuck inside colliders
@@ -163,13 +176,14 @@ class PhysicsMovement extends Component
     CalculateXPosition()
     {
         var newPosition = 0;
-        var windStrength = this.isGrounded ? 0 : this.windSpeed;
+        var windStrength = this.isGrounded ? 0 : this.parentGameObject.parentScene.windSpeed;
+        var drag = this.isGrounded ? this.groundResistance : this.airResistance;
 
-        newPosition += ((this.parentGameObject.posX) - (((this.mass * this.speedX) - ((windStrength * this.mass) / (this.airResistance))) / (-this.airResistance)));
+        newPosition += ((this.parentGameObject.posX) - (((this.mass * this.speedX) - ((windStrength * this.mass) / (drag))) / (-drag)));
 
-        newPosition += ((((this.mass * this.speedX) - ((windStrength * this.mass) / (this.airResistance))) / (-this.airResistance)) * (Math.exp((-this.airResistance * deltaTime) / (this.mass))));
+        newPosition += ((((this.mass * this.speedX) - ((windStrength * this.mass) / (drag))) / (-drag)) * (Math.exp((-drag * deltaTime) / (this.mass))));
 
-        newPosition += ((windStrength * deltaTime) / (this.airResistance));
+        newPosition += ((windStrength * deltaTime) / (drag));
 
         return newPosition;
     }
@@ -177,12 +191,13 @@ class PhysicsMovement extends Component
     CalculateYPosition()
     {
         var newPosition = 0;
+        var gravity = this.parentGameObject.parentScene.sceneGravity;
 
-        newPosition += ((this.parentGameObject.posY) - (((this.mass * this.speedY) + ((this.gravity * this.mass * this.mass) / (this.airResistance))) / (-this.airResistance)));
+        newPosition += ((this.parentGameObject.posY) - (((this.mass * this.speedY) + ((gravity * this.mass * this.mass) / (this.airResistance))) / (-this.airResistance)));
 
-        newPosition += ((((this.mass * this.speedY) + ((this.gravity * this.mass * this.mass) / (this.airResistance))) / (-this.airResistance)) * (Math.exp((-this.airResistance * deltaTime) / (this.mass))));
+        newPosition += ((((this.mass * this.speedY) + ((gravity * this.mass * this.mass) / (this.airResistance))) / (-this.airResistance)) * (Math.exp((-this.airResistance * deltaTime) / (this.mass))));
 
-        newPosition -= ((this.gravity * this.mass * deltaTime) / (this.airResistance));
+        newPosition -= ((gravity * this.mass * deltaTime) / (this.airResistance));
 
         return newPosition;
     }
@@ -196,13 +211,14 @@ class PhysicsMovement extends Component
     CalculateXSpeed()
     {
         var newSpeed = 0;
-        var windStrength = this.isGrounded ? 0 : this.windSpeed;
+        var windStrength = this.isGrounded ? 0 : this.parentGameObject.parentScene.windSpeed;
+        var drag = this.isGrounded ? this.groundResistance : this.airResistance;
 
-        newSpeed += (-this.airResistance / this.mass);
-        newSpeed *= (((this.mass * this.speedX) - ((windStrength * this.mass) / (this.airResistance))) / (-this.airResistance));
-        newSpeed *= (Math.exp((-this.airResistance * deltaTime) / (this.mass)));
+        newSpeed += (-drag / this.mass);
+        newSpeed *= (((this.mass * this.speedX) - ((windStrength * this.mass) / (drag))) / (-drag));
+        newSpeed *= (Math.exp((-drag * deltaTime) / (this.mass)));
 
-        newSpeed += (windStrength / this.airResistance);
+        newSpeed += (windStrength / drag);
 
         return newSpeed;
     }
@@ -210,12 +226,13 @@ class PhysicsMovement extends Component
     CalculateYSpeed()
     {
         var newSpeed = 0;
+        var gravity = this.parentGameObject.parentScene.sceneGravity;
 
         newSpeed += ((-this.airResistance) / (this.mass));
-        newSpeed *= (((this.mass * this.speedY) + ((this.gravity * this.mass * this.mass) / (this.airResistance))) / (-this.airResistance));
+        newSpeed *= (((this.mass * this.speedY) + ((gravity * this.mass * this.mass) / (this.airResistance))) / (-this.airResistance));
         newSpeed *= (Math.exp((-this.airResistance * deltaTime) / (this.mass)));
 
-        newSpeed -= ((this.gravity * this.mass) / (this.airResistance));
+        newSpeed -= ((gravity * this.mass) / (this.airResistance));
 
         return newSpeed;
     }
@@ -229,7 +246,7 @@ Individual Collision Behaviours
 */
 var FrogCollisionBehaviour =
 {
-    OnCollision : function(hitCollider)
+    OnCollision : function(hitCollider, ownCollider)
     {
 
     }
@@ -237,8 +254,18 @@ var FrogCollisionBehaviour =
 
 var BulletCollisionBehaviour =
 {
-    OnCollision : function(hitCollider)
+    OnCollision : function(hitCollider, ownCollider)
     {
+        console.info("Attempting to destroy: " + hitCollider.parentGameObject.gameObjectName + " & " + ownCollider.parentGameObject.gameObjectName);
 
+        // Destroying the hit object
+        var parentScene = hitCollider.parentGameObject.parentScene;
+        console.info(parentScene);
+        parentScene.DestroyObject(hitCollider.parentGameObject);
+
+        // Destroying Self
+        parentScene = ownCollider.parentGameObject.parentScene;
+        console.info(parentScene);
+        parentScene.DestroyObject(ownCollider.parentGameObject);
     }
 }

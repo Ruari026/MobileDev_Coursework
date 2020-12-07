@@ -167,6 +167,7 @@ var JumpButtonEvent =
     {
         if (this.targetFrog != null)
         {
+            //console.info("Frog Charging");
             this.targetFrog.GetComponent("PlayerController").Charge();
         }
     },
@@ -177,8 +178,6 @@ var JumpButtonEvent =
         {
             console.info("Frog Jumping");
             this.targetFrog.GetComponent("PlayerController").Jump();
-            //this.targetPhysicsMovement.speedX += 2500;
-            //this.targetPhysicsMovement.speedY -= 2500;
         }
         else
         {
@@ -205,6 +204,8 @@ var TargetButtonEvent =
 
 var FireButtonEvent =
 {
+    targetFrog : null,
+
     OnHold : function(inputX, inputY)
     {
         if (this.targetFrog != null)
@@ -229,6 +230,8 @@ var FireButtonEvent =
 
 var WindButtonEvent =
 {
+    targetScene : null,
+
     windUIRenderer : null,
     windLevel : 0,
 
@@ -241,14 +244,14 @@ var WindButtonEvent =
     {
         if (this.windUIRenderer != null)
         {
-            console.info('Changing Wind Speed');
-
-            this.windLevel++;
-            if (this.windLevel >= 9)
+            this.windLevel--;
+            if (this.windLevel < 0)
             {
-                this.windLevel = 0;
+                this.windLevel = 8;
             }
 
+            console.info('Changing Wind Speed: ' + (this.windLevel - 4));
+            this.targetScene.windSpeed = (-75 * (this.windLevel - 4));
             this.windUIRenderer.spriteOffsetY = (this.windLevel * this.windUIRenderer.spriteHeight);
         }
         else
