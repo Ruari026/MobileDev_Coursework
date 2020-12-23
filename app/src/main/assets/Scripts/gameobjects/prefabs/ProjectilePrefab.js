@@ -1,6 +1,5 @@
 class ProjectilePrefab extends GameObject
 {
-
     constructor(name, scene)
     {
         super(name, scene);
