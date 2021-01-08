@@ -27,7 +27,6 @@ class PhysicsMovement extends Component
         // Checks new speed first
         this.speedX = this.CalculateXSpeed();
         this.speedY = this.CalculateYSpeed();
-        //console.info('New Speed - X: ' + this.speedX + ', Y: ' + this.speedY);
 
         // Storing old GameObject's position
         var oldXPos = this.parentGameObject.GetGlobalPos().x;
@@ -262,6 +261,8 @@ var BulletCollisionBehaviour =
         var parentScene = hitCollider.parentGameObject.parentScene;
         console.info(parentScene);
         parentScene.DestroyObject(hitCollider.parentGameObject);
+
+        // Tells the scene to start the next turn
 
         // Destroying Self
         parentScene = ownCollider.parentGameObject.parentScene;

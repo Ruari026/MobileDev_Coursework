@@ -15,27 +15,40 @@ class GameplayScene extends GameScene
         ====================================================================================================
         */
         {
-        // Every scene needs a camera
-        var newCamera = new CameraPrefab("Camera", this);
-        newCamera.SetGlobalPos({'x' : -0, 'y' : -0});
-        this.sceneCamera = newCamera;
-        this.sceneObjects.push(newCamera);
+            // Every scene needs a camera
+            var newCamera = new CameraPrefab("Camera", this);
+            newCamera.SetGlobalPos({'x' : -0, 'y' : -0});
+            this.sceneCamera = newCamera;
+            this.sceneObjects.push(newCamera);
 
-        // Parallax Background
-        var background = new GameObject("Background", this);
-        background.SetGlobalPos({'x' : 0, 'y' : -0});
-        background.width = 750;
-        background.height = 750;
+            // Parallax Background
+            var background = new GameObject("Background", this);
+            background.SetGlobalPos({'x' : 0, 'y' : -0});
+            background.width = 750;
+            background.height = 750;
 
-        var backgroundRenderer = new SpriteRenderer(background);
-        backgroundRenderer.filePath = 'Images/environment_layer.png';
-        backgroundRenderer.spriteWidth = 1024;
-        backgroundRenderer.spriteHeight = 1024;
-        backgroundRenderer.frameMax = 1;
-        background.AddRenderer(backgroundRenderer);
+            var backgroundRenderer = new SpriteRenderer(background);
+            backgroundRenderer.filePath = 'Images/environment_layer.png';
+            backgroundRenderer.spriteWidth = 1024;
+            backgroundRenderer.spriteHeight = 1024;
+            backgroundRenderer.frameMax = 1;
+            background.AddRenderer(backgroundRenderer);
 
-        this.sceneObjects.push(background);
+            this.sceneObjects.push(background);
         }
+
+
+        /*
+        ====================================================================================================
+        Scene Specific Controller
+        ====================================================================================================
+        */
+        var sceneManager = new GameObject("Scene Manager");
+        this.sceneObjects.push(sceneManager);
+
+        var managerComponent = new GameManager(sceneManager);
+        sceneManager.AddComponent(managerComponent);
+
 
         /*
         ====================================================================================================
@@ -43,34 +56,37 @@ class GameplayScene extends GameScene
         ====================================================================================================
         */
         {
-        // Adding Starting Platforms
-        // Bottom Left
-        var newPlatform = new PlatformPrefab("Bottom Left Platform", this);
-        //newPlatform.posX = -200;
-        newPlatform.posY = 200;
-        this.sceneObjects.push(newPlatform);
-        // Bottom Right
-        newPlatform = new PlatformPrefab("Bottom Right Platform", this);
-        //newPlatform.posX = 200;
-        newPlatform.posY = -200;
-        this.sceneObjects.push(newPlatform);
+            // Adding Starting Platforms
+            // Bottom Left
+            var newPlatform = new PlatformPrefab("Bottom Left Platform", this);
+            //newPlatform.posX = -200;
+            newPlatform.posY = 200;
+            this.sceneObjects.push(newPlatform);
+            // Bottom Right
+            newPlatform = new PlatformPrefab("Bottom Right Platform", this);
+            //newPlatform.posX = 200;
+            newPlatform.posY = -200;
+            this.sceneObjects.push(newPlatform);
 
-        // Top Left
-        var newPlatform = new WallPrefab("Top Left Platform", this);
-        newPlatform.posX = -300;
-        //newPlatform.posY = 150;
-        this.sceneObjects.push(newPlatform);
-        // Top Right
-        newPlatform = new WallPrefab("Top Right Platform", this);
-        newPlatform.posX = 300;
-        //newPlatform.posY = 150;
-        this.sceneObjects.push(newPlatform);
+            // Top Left
+            var newPlatform = new WallPrefab("Top Left Platform", this);
+            newPlatform.posX = -300;
+            //newPlatform.posY = 150;
+            this.sceneObjects.push(newPlatform);
+            // Top Right
+            newPlatform = new WallPrefab("Top Right Platform", this);
+            newPlatform.posX = 300;
+            //newPlatform.posY = 150;
+            this.sceneObjects.push(newPlatform);
         }
 
         // Adding player characters to the scene
         var frog1 = new PlayerFrog("Player 1", this);
         frog1.SetGlobalPos({x : -150, y : -75});
         this.sceneObjects.push(frog1);
+
+        // Letting the scene manager know about the player frogs
+        managerComponent.currentPlayer = frog1;
 
         /*
         ====================================================================================================
@@ -114,7 +130,7 @@ class GameplayScene extends GameScene
         buttonController = new ButtonComponent(jumpButton);
         buttonController.targetRenderer = buttonRenderer;
         buttonController.buttonBehaviour = JumpButtonEvent;
-        buttonController.buttonBehaviour.targetFrog = frog1;
+        buttonController.buttonBehaviour.sceneController = sceneManager;
         jumpButton.AddComponent(buttonController);
 
         this.sceneObjects.push(jumpButton);
@@ -135,7 +151,7 @@ class GameplayScene extends GameScene
         buttonController = new ButtonComponent(fireButton);
         buttonController.targetRenderer = buttonRenderer;
         buttonController.buttonBehaviour = FireButtonEvent;
-        buttonController.buttonBehaviour.targetFrog = frog1;
+        buttonController.buttonBehaviour.sceneController = sceneManager;
         fireButton.AddComponent(buttonController);
 
         this.sceneObjects.push(fireButton);
@@ -163,6 +179,11 @@ class GameplayScene extends GameScene
         windButton.AddComponent(buttonController);
 
         this.sceneObjects.push(windButton);
+
+
+        // Telling the Scene Manager about the UI buttons
+        managerComponent.jumpButton = jumpButton;
+        managerComponent.fireButton = fireButton;
         }
     }
 }

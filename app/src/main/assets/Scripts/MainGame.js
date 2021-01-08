@@ -13,6 +13,7 @@ var sceneManager = null;
 // Time Management
 var deltaTime = 0;
 var maxDeltaTime = 0.02;
+var timeScale = 1.0;
 var prevTime = 0;
 
 window.onload = function()
@@ -94,13 +95,14 @@ function Run()
     // Clearing Screen
     canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Calculating Game Info
+    // Calculating the time between frames
     deltaTime = ((Date.now() - this.prevTime) / 1000);
     if (deltaTime > maxDeltaTime)
     {
         deltaTime = maxDeltaTime;
     }
     prevTime = Date.now();
+    deltaTime = (deltaTime * timeScale);
 
     // Running Current Scene
     currentScene.UpdateScene();

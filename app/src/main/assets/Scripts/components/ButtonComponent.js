@@ -4,6 +4,7 @@ class ButtonComponent extends Component
 
     targetRenderer = null;
 
+    buttonDisabled = false;
     buttonPressed = false;
     isScreenSpace = true;
 
@@ -14,7 +15,7 @@ class ButtonComponent extends Component
 
     Update()
     {
-        if (this.buttonPressed)
+        if (this.buttonPressed && !this.buttonDisabled)
         {
             this.buttonBehaviour.OnHold(this.lastXPos, this.lastYPos);
         }
@@ -22,6 +23,13 @@ class ButtonComponent extends Component
 
     Input(event)
     {
+        // If button is disabled then there is no point checking input
+        if (this.buttonDisabled)
+        {
+            return;
+        }
+
+        // Otherwise check if input is relevant to buttons
         if (event.type == 'touchstart' || event.type == 'mousedown')
         {
             // Storing input position (based on platform)
@@ -76,7 +84,7 @@ class ButtonComponent extends Component
             }
 
             // If the button was pressed return to normal state
-            //console.info('Button Released')
+            // console.info('Button Released')
             this.buttonPressed = false;
 
             // Updating Renderer
@@ -138,6 +146,24 @@ class ButtonComponent extends Component
         //console.info('Outside Rect')
         return false;
     }
+
+    DisableButton(isDisabled)
+    {
+        if (isDisabled)
+        {
+            // Prevent input checking
+            this.buttonDisabled = isDisabled;
+
+            // Update button image
+        }
+        else
+        {
+            // Re-enable input checking
+            this.buttonDisabled = isDisabled;
+
+            // Reset button image
+        }
+    }
 }
 
 
@@ -161,27 +187,27 @@ var CameraButtonEvent =
 
 var JumpButtonEvent =
 {
-    targetFrog : null,
+    sceneController : null,
 
     OnHold : function(inputX, inputY)
     {
-        if (this.targetFrog != null)
+        if (this.sceneController != null)
         {
             //console.info("Frog Charging");
-            this.targetFrog.GetComponent("PlayerController").Charge();
+            this.sceneController.GetComponent("GameManager").ChargeCurrentFrog();
         }
     },
 
     OnClick : function(inputX, inputY)
     {
-        if (this.targetFrog != null)
+        if (this.sceneController != null)
         {
             console.info("Frog Jumping");
-            this.targetFrog.GetComponent("PlayerController").Jump();
+            this.sceneController.GetComponent("GameManager").JumpCurrentFrog();
         }
         else
         {
-            console.error("ERROR: Target Frog Has Not Been Assigned");
+            console.error("ERROR: Scene Manager Has Not Been Assigned");
         }
     }
 }
@@ -204,26 +230,26 @@ var TargetButtonEvent =
 
 var FireButtonEvent =
 {
-    targetFrog : null,
+    sceneController : null,
 
     OnHold : function(inputX, inputY)
     {
-        if (this.targetFrog != null)
+        if (this.sceneController != null)
         {
-            this.targetFrog.GetComponent("PlayerController").Charge();
+            this.sceneController.GetComponent("GameManager").ChargeCurrentFrog();
         }
     },
 
     OnClick : function(inputX, inputY)
     {
-        if (this.targetFrog != null)
+        if (this.sceneController != null)
         {
             console.info("Frog Firing");
-            this.targetFrog.GetComponent("PlayerController").Fire();
+            this.sceneController.GetComponent("GameManager").FireCurrentFrog();
         }
         else
         {
-            console.error("ERROR: Target Frog Has Not Been Assigned");
+            console.error("ERROR: Scene Controller Has Not Been Assigned");
         }
     }
 }
