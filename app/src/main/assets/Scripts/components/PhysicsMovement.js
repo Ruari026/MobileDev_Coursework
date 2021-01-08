@@ -17,6 +17,12 @@ class PhysicsMovement extends Component
     layersToIgnore = [];
     collisionEvent = null;
 
+
+    /*
+    ====================================================================================================
+    Component Inherited Methods
+    ====================================================================================================
+    */
     Start()
     {
 
@@ -259,14 +265,15 @@ var BulletCollisionBehaviour =
 
         // Destroying the hit object
         var parentScene = hitCollider.parentGameObject.parentScene;
-        console.info(parentScene);
         parentScene.DestroyObject(hitCollider.parentGameObject);
 
+        // Gets the scene controller in the scene
+        var sceneController = parentScene.GetSceneObject("Scene Manager");
         // Tells the scene to start the next turn
+        sceneController.GetComponent("GameManager").SwitchState(GameState.STATE_TURNEND);
 
         // Destroying Self
         parentScene = ownCollider.parentGameObject.parentScene;
-        console.info(parentScene);
         parentScene.DestroyObject(ownCollider.parentGameObject);
     }
 }

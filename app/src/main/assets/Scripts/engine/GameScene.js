@@ -95,6 +95,18 @@ class GameScene
         }
     }
 
+    GetSceneObject(objectName)
+    {
+        // Gets an object that exists at the scene root
+        for (var i = 0; i < this.sceneObjects.length; i++)
+        {
+            if (this.sceneObjects[i].gameObjectName == objectName)
+            {
+                return this.sceneObjects[i];
+            }
+        }
+    }
+
     GetSceneColliders()
     {
         var sceneColliders = [];

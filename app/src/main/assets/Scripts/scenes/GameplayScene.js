@@ -14,28 +14,29 @@ class GameplayScene extends GameScene
         Necessary Scene Details
         ====================================================================================================
         */
-        {
-            // Every scene needs a camera
-            var newCamera = new CameraPrefab("Camera", this);
-            newCamera.SetGlobalPos({'x' : -0, 'y' : -0});
-            this.sceneCamera = newCamera;
-            this.sceneObjects.push(newCamera);
+        // Every scene needs a camera
+        var newCamera = new CameraPrefab("Camera", this);
+        newCamera.SetGlobalPos({'x' : -0, 'y' : -0});
+        this.sceneCamera = newCamera;
+        this.sceneObjects.push(newCamera);
+        // Controller to allow camera to follow other objects in the scene
+        var cameraController = new CameraController(newCamera);
+        newCamera.AddComponent(cameraController);
 
-            // Parallax Background
-            var background = new GameObject("Background", this);
-            background.SetGlobalPos({'x' : 0, 'y' : -0});
-            background.width = 750;
-            background.height = 750;
+        // Parallax Background
+        var background = new GameObject("Background", this);
+        background.SetGlobalPos({'x' : 0, 'y' : -0});
+        background.width = 750;
+        background.height = 750;
 
-            var backgroundRenderer = new SpriteRenderer(background);
-            backgroundRenderer.filePath = 'Images/environment_layer.png';
-            backgroundRenderer.spriteWidth = 1024;
-            backgroundRenderer.spriteHeight = 1024;
-            backgroundRenderer.frameMax = 1;
-            background.AddRenderer(backgroundRenderer);
+        var backgroundRenderer = new SpriteRenderer(background);
+        backgroundRenderer.filePath = 'Images/environment_layer.png';
+        backgroundRenderer.spriteWidth = 1024;
+        backgroundRenderer.spriteHeight = 1024;
+        backgroundRenderer.frameMax = 1;
+        background.AddRenderer(backgroundRenderer);
 
-            this.sceneObjects.push(background);
-        }
+        this.sceneObjects.push(background);
 
 
         /*
@@ -49,6 +50,9 @@ class GameplayScene extends GameScene
         var managerComponent = new GameManager(sceneManager);
         sceneManager.AddComponent(managerComponent);
 
+
+        // Letting the scene manager know about the camera
+        managerComponent.sceneCamera = newCamera;
 
         /*
         ====================================================================================================

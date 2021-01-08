@@ -13,6 +13,12 @@ class ButtonComponent extends Component
 
     buttonBehaviour = null;
 
+
+    /*
+    ====================================================================================================
+    Component Inherited Methods
+    ====================================================================================================
+    */
     Update()
     {
         if (this.buttonPressed && !this.buttonDisabled)

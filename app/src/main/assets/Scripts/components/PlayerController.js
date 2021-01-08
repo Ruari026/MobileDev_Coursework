@@ -7,6 +7,7 @@ class PlayerController extends Component
     // Targeting recticle details
     theReticle = null;
     reticleOffsetMagnitude = 50;
+
     // Targeting power details
     thePowerMeter = null;
     powerRotationOffset = 45;
@@ -16,6 +17,11 @@ class PlayerController extends Component
     maxChargeTime = 0.25;
 
 
+    /*
+    ====================================================================================================
+    Component Inherited Methods
+    ====================================================================================================
+    */
     Start()
     {
 
@@ -153,7 +159,9 @@ class PlayerController extends Component
 
         // Creating New Projectile
         var newProjectile = new ProjectilePrefab('Projectile', this.parentGameObject.parentScene);
+        // Makes sure that the new projectile can't collide with the gameobject that spawned it
         newProjectile.GetComponent('PhysicsMovement').layersToIgnore.push(this.parentGameObject.gameObjectName);
+        // Set's the projectile's inital speed (Based on the frog's reticle direction)
         newProjectile.GetComponent("PhysicsMovement").speedX += (direction.x * 125 * this.currentPowerLevel);
         newProjectile.GetComponent("PhysicsMovement").speedY += (direction.y * 125 * this.currentPowerLevel);
 

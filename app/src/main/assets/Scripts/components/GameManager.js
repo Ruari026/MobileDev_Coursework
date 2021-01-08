@@ -27,9 +27,14 @@ class GameManager extends Component
     currentPlayer = null;
     turnChangeTimer = 0;
 
+
+    /*
+    ====================================================================================================
+    Component Inherited Methods
+    ====================================================================================================
+    */
     Start()
     {
-
     }
 
     Update()
@@ -38,7 +43,6 @@ class GameManager extends Component
         {
             case (GameState.STATE_TURNSTART):
             {
-
             }
             break;
 
@@ -67,6 +71,8 @@ class GameManager extends Component
                 {
                     // Reset timer as player is still in motion
                     this.turnChangeTimer = 0;
+
+                    // Also zoom camera out (to a max of 2)
                 }
             }
             break
