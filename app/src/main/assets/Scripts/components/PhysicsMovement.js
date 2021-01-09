@@ -261,18 +261,28 @@ var BulletCollisionBehaviour =
 {
     OnCollision : function(hitCollider, ownCollider)
     {
-        console.info("Attempting to destroy: " + hitCollider.parentGameObject.gameObjectName + " & " + ownCollider.parentGameObject.gameObjectName);
-
-        // Destroying the hit object
+        // Gets the sceneController in the scene
         var parentScene = hitCollider.parentGameObject.parentScene;
-        parentScene.DestroyObject(hitCollider.parentGameObject);
-
-        // Gets the scene controller in the scene
         var sceneController = parentScene.GetSceneObject("Scene Manager");
+
+        // Checking to see if the hit object was a Tile or the other player
+        var hitObjectName = hitCollider.parentGameObject.gameObjectName;
+        if (hitObjectName == "Tile")
+        {
+            // Projectile hit a tile, tiles can just be destroyed
+            console.info("Attempting to destroy: " + hitCollider.parentGameObject.gameObjectName);
+            parentScene.DestroyObject(hitCollider.parentGameObject);
+        }
+        else if (hitObjectName == "Player 1" || hitObjectName == "Player 2")
+        {
+            // Can check for both players since projectiles source player can't be hit due to collision layers
+        }
+
         // Tells the scene to start the next turn
         sceneController.GetComponent("GameManager").SwitchState(GameState.STATE_TURNEND);
 
-        // Destroying Self
+        // Finally Projectile Destroys Itself
+        console.info("Attempting to destroy: " + ownCollider.parentGameObject.gameObjectName);
         parentScene = ownCollider.parentGameObject.parentScene;
         parentScene.DestroyObject(ownCollider.parentGameObject);
     }

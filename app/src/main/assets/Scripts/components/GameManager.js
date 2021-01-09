@@ -1,9 +1,9 @@
 const GameState = Object.freeze({
-    "STATE_TURNSTART" : 1,
-    "STATE_PROJECTILEFIRED" : 2,
-    "STATE_FROGJUMPING" : 3,
-    "STATE_TURNEND" : 4,
-    "STATE_PAUSED" : 5
+    STATE_TURNSTART : "STATE_TURNSTART",
+    STATE_PROJECTILEFIRED : "STATE_PROJECTILEFIRED",
+    STATE_FROGJUMPING : "STATE_FROGJUMPING",
+    STATE_TURNEND : "STATE_TURNEND",
+    STATE_PAUSED : "STATE_PAUSED"
 })
 
 class GameManager extends Component
@@ -23,7 +23,7 @@ class GameManager extends Component
     fireButton = null;
 
     // Controlling player turns
-    isPlayer1 = false;
+    isPlayer1 = true;
     currentPlayer = null;
     turnChangeTimer = 0;
 
@@ -35,6 +35,8 @@ class GameManager extends Component
     */
     Start()
     {
+        // Ensuring that the game starts off in the turn start state (and handles any associated logic)
+        this.SwitchState(GameState.STATE_TURNSTART);
     }
 
     Update()
@@ -57,12 +59,13 @@ class GameManager extends Component
                 var physicsMovement = this.currentPlayer.GetComponent("PhysicsMovement");
 
                 // Checking if the current player has stopped moving
-                var movementMagnitude = (physicsMovement.speedX * physicsMovement.speedX) + (physicsMovement.speedY + physicsMovement.speedY);
-                if (movementMagnitude < 1)
+                var movementMagnitude = (physicsMovement.speedX * physicsMovement.speedX) + (physicsMovement.speedY * physicsMovement.speedY);
+                console.info(movementMagnitude);
+                if (movementMagnitude < 5)
                 {
                     // Player needs to have stopped for a few seconds before their turn can be considered over
                     this.turnChangeTimer += deltaTime;
-                    if (this.turnChangeTimer > 0.5)
+                    if (this.turnChangeTimer > 0.25)
                     {
                         this.SwitchState(GameState.STATE_TURNEND);
                     }
@@ -93,7 +96,6 @@ class GameManager extends Component
     {
         this.currentGameState = newState
         console.info('Game State Changed, New Game State: ' + this.currentGameState);
-        //console.info(this.jumpButtonController);
 
         switch (this.currentGameState)
         {
@@ -106,9 +108,12 @@ class GameManager extends Component
                 this.jumpButton.GetComponent("ButtonComponent").DisableButton(false);
                 this.fireButton.GetComponent("ButtonComponent").DisableButton(false);
 
-                // Show the targeting recticle on the current player
+                // Show the targeting reticle on the current player
+                this.currentPlayer.GetComponent("PlayerController").theReticle.active = true;
+                TargetButtonEvent.targetFrog = this.currentPlayer;
 
-                // Set camera focus to the next player's frog
+                // Set camera focus to the player's frog
+                this.sceneCamera.GetComponent("CameraController").cameraTarget = this.currentPlayer;
             }
             break;
 
@@ -122,6 +127,9 @@ class GameManager extends Component
                 this.fireButton.GetComponent("ButtonComponent").DisableButton(true);
 
                 // Set camera focus to the newly spawned projectile
+
+                // Hide the targeting reticle on the current player
+                this.currentPlayer.GetComponent("PlayerController").theReticle.active = false;
             }
             break
 
@@ -136,13 +144,16 @@ class GameManager extends Component
 
                 // Ensuring that the turn change timer is reset
                 this.turnChangeTimer = 0;
+
+                // Hide the targeting reticle on the current player
+                this.currentPlayer.GetComponent("PlayerController").theReticle.active = false;
             }
             break
 
             case (GameState.STATE_TURNEND):
             {
                 // Switching control over to the other player
-                /*if (this.isPlayer1)
+                if (this.isPlayer1)
                 {
                     // Next is player 2s turn
                     this.currentPlayer = this.player2;
@@ -153,7 +164,7 @@ class GameManager extends Component
                     // Next is player 1s turn
                     this.currentPlayer = this.player1;
                     this.isPlayer1 = true;
-                }*/
+                }
 
                 // Start the next turn
                 this.SwitchState(GameState.STATE_TURNSTART);

@@ -105,8 +105,8 @@ class ButtonComponent extends Component
     {
         var rectMin =
         {
-            x : (((canvas.width * this.parentGameObject.anchorX) + this.parentGameObject.posX) - (this.parentGameObject.width / 2)),
-            y : (((canvas.height * this.parentGameObject.anchorY) + this.parentGameObject.posY) - (this.parentGameObject.height / 2))
+            x : ((canvas.width * this.parentGameObject.anchorX) + this.parentGameObject.posX) - (this.parentGameObject.width / 2),
+            y : ((canvas.height * this.parentGameObject.anchorY) + this.parentGameObject.posY) - (this.parentGameObject.height / 2)
         };
 
         // Checking X Axis
@@ -133,9 +133,10 @@ class ButtonComponent extends Component
             x : (this.parentGameObject.GetGlobalPos().x - (this.parentGameObject.width / 2)) * this.parentGameObject.parentScene.sceneCamera.zoom,
             y : (this.parentGameObject.GetGlobalPos().y - (this.parentGameObject.height / 2)) * this.parentGameObject.parentScene.sceneCamera.zoom
         };
+
         // Getting Screen Space Pos
-        rectMin.x += canvasX;
-        rectMin.y += canvasY;
+        rectMin.x += canvasX - this.parentGameObject.parentScene.sceneCamera.posX;
+        rectMin.y += canvasY - this.parentGameObject.parentScene.sceneCamera.posY;
 
         // Checking X Axis
         if((inputX > rectMin.x) && (inputX < rectMin.x + (this.parentGameObject.width * this.parentGameObject.parentScene.sceneCamera.zoom)))
@@ -224,8 +225,14 @@ var TargetButtonEvent =
 
     OnHold : function(inputX, inputY)
     {
+        var input = {
+            x : inputX + this.targetFrog.parentScene.sceneCamera.posX,
+            y : inputY + this.targetFrog.parentScene.sceneCamera.posY
+        };
+
         //console.info("Changing Target Angle");
-        this.targetFrog.GetComponent("PlayerController").Aim(inputX, inputY);
+        // Input position should be passed though as it's position in worldspace
+        this.targetFrog.GetComponent("PlayerController").Aim(input.x, input.y);
     },
 
     OnClick : function(inputX, inputY)

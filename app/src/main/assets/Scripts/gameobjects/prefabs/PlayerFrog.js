@@ -10,7 +10,7 @@ class PlayerFrog extends GameObject
 
         // Collider
         var newCollider = new BoxCollider(this);
-        newCollider.sizeX = 45;
+        newCollider.sizeX = 40;
         newCollider.sizeY = 45;
         newCollider.colliderLayer = name;
         this.AddCollider(newCollider);
@@ -18,7 +18,7 @@ class PlayerFrog extends GameObject
         // Renderer
         var newRenderer = new SpriteRenderer(this);
         // General renderer details
-        newRenderer.filePath = 'Images/frog.png';
+        newRenderer.filePath = 'Images/frog2.png';
         newRenderer.spriteWidth = 128;
         newRenderer.spriteHeight = 128;
         // Renderer animation details
@@ -58,6 +58,8 @@ class PlayerFrog extends GameObject
         buttonController.buttonBehaviour = TargetButtonEvent;
         buttonController.isScreenSpace = false;
         targetGameObject.AddComponent(buttonController);
+        // Targeting UI should start off hidden
+        targetGameObject.active = false;
 
         // Controller
         var frogController = new PlayerController(this);
