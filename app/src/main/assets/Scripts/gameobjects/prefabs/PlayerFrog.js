@@ -6,7 +6,7 @@ class PlayerFrog extends GameObject
 
         // Dimensions
         this.width = 50;
-        this.height = 50;
+        this.height = 43;
 
         // Collider
         var newCollider = new BoxCollider(this);
@@ -20,7 +20,7 @@ class PlayerFrog extends GameObject
         // General renderer details
         newRenderer.filePath = 'Images/frog2.png';
         newRenderer.spriteWidth = 128;
-        newRenderer.spriteHeight = 128;
+        newRenderer.spriteHeight = 110;
         // Renderer animation details
         newRenderer.canAnimate = true;
         newRenderer.maxFrames = 2;

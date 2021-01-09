@@ -38,6 +38,7 @@ class SpriteRenderer extends Component
     */
     Start()
     {
+        this.img = new Image();
         this.img.src = this.filePath;
         this.img.style.transform = 'rotate(90deg)'
     }

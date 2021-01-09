@@ -126,6 +126,38 @@ class GameplayScene extends GameScene
              managerComponent.currentPlayer = frog1;
         }
 
+        /*
+        ====================================================================================================
+        Foreground
+        ====================================================================================================
+        */
+        {
+            // Tiles the fore a few times (only tiles on the x axis)
+            var backgroundWidth = 128;
+            var numberOfTiles = 1;
+            // Layer 1
+            for (var i = 0; i < numberOfTiles; i++)
+            {
+                var background = new GameObject("Background", this);
+                background.width = backgroundWidth;
+                background.height = 128;
+
+                background.SetGlobalPos(
+                {
+                    'x' : ((-backgroundWidth * numberOfTiles / 2) + (backgroundWidth * i)),
+                    'y' : 250
+                });
+
+                var backgroundRenderer = new SpriteRenderer(background);
+                backgroundRenderer.filePath = 'Images/waves (1).png';
+                backgroundRenderer.spriteWidth = 96;
+                backgroundRenderer.spriteHeight = 96;
+                backgroundRenderer.frameMax = 1;
+                background.AddRenderer(backgroundRenderer);
+                this.sceneObjects.push(background);
+            }
+        }
+
 
         /*
         ====================================================================================================

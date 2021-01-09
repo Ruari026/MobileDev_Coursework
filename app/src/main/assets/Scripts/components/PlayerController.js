@@ -175,6 +175,10 @@ class PlayerController extends Component
         // Adding new projectile to scene
         this.parentGameObject.parentScene.AddObject(newProjectile);
 
+        // Setting the camera to follow the new projectile
+       var sceneCamera = this.parentGameObject.parentScene.sceneCamera;
+       sceneCamera.GetComponent("CameraController").cameraTarget = newProjectile;
+
         // Reset Charge Meter
         this.ResetCharge();
     }
