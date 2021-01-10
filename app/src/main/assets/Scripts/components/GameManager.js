@@ -60,10 +60,10 @@ class GameManager extends Component
 
                 // Checking if the current player has stopped moving
                 var movementMagnitude = (physicsMovement.speedX * physicsMovement.speedX) + (physicsMovement.speedY * physicsMovement.speedY);
-                console.info(movementMagnitude);
+                //console.info(movementMagnitude);
                 if (movementMagnitude < 5)
                 {
-                    // Player needs to have stopped for a few seconds before their turn can be considered over
+                    // Player needs to have stopped for a few seconds before they can move again or shoot
                     this.turnChangeTimer += deltaTime;
                     if (this.turnChangeTimer > 0.25)
                     {

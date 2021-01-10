@@ -314,11 +314,11 @@ class GameplayScene extends GameScene
 
             // WindSpeed Button
             var windButton = new GameObject('Wind Button', this);
-            windButton.posX = 60;
+            windButton.posX = 0;
             windButton.posY = 22.5;
             windButton.width = 100;
             windButton.height = 25;
-            windButton.anchorX = 0;
+            windButton.anchorX = 0.5;
             windButton.anchorY = 0;
 
             buttonRenderer = new UIRenderer(windButton);
@@ -344,14 +344,17 @@ class GameplayScene extends GameScene
 
         // UI Text
         {
-            // Camera Button
+            // Turn Timer
             var testText = new GameObject('Test Text Renderer', this);
+            testText.posX = 0;
+            testText.posY = 75;
             testText.anchorX = 0.5;
-            testText.anchorY = 0.5;
+            testText.anchorY = 0;
 
             var textRenderer = new TextRenderer(testText);
-            textRenderer.text = "Hello World";
+            textRenderer.text = "- XX -";
             textRenderer.textAlign = 'center';
+            textRenderer.fontSize = 36;
             testText.AddRenderer(textRenderer, 10);
 
             this.sceneObjects.push(testText);
