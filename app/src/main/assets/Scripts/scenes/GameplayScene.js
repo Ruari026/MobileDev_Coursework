@@ -19,7 +19,8 @@ class GameplayScene extends GameScene
         newCamera.SetGlobalPos({'x' : -0, 'y' : -0});
         this.sceneCamera = newCamera;
         this.sceneObjects.push(newCamera);
-
+        // Ensuring that the camera starts at it's default zoom value (this also calculates the screen scaling for rendering across multiple devices)
+        this.sceneCamera.SetCameraZoom(1.0);
         // Controller to allow camera to follow other objects in the scene
         var cameraController = new CameraController(newCamera);
         newCamera.AddComponent(cameraController);
@@ -128,36 +129,119 @@ class GameplayScene extends GameScene
 
         /*
         ====================================================================================================
-        Foreground
+        Foreground (Handled in 3 layers)
         ====================================================================================================
         */
+        // Purple Layer (Furthest Back)
         {
-            // Tiles the fore a few times (only tiles on the x axis)
-            var backgroundWidth = 128;
-            var numberOfTiles = 1;
-            // Layer 1
+            // Controller to store all of the individual wave tiles and handle animation
+            var waveController1 = new GameObject("WaveController (1)");
+            this.sceneObjects.push(waveController1);
+
+            var waveAnimator = new WaveAnimatorController(waveController1);
+            waveAnimator.animationSpeed = -30;
+            waveController1.AddComponent(waveAnimator);
+
+            // Spawning individual tiles
+            var numberOfTiles = 19;
             for (var i = 0; i < numberOfTiles; i++)
             {
-                var background = new GameObject("Background", this);
-                background.width = backgroundWidth;
-                background.height = 128;
+                var waveTile = new GameObject("WaveTile", this);
+                waveTile.width = 130;
+                waveTile.height = 250;
 
-                background.SetGlobalPos(
+                waveTile.SetGlobalPos(
                 {
-                    'x' : ((-backgroundWidth * numberOfTiles / 2) + (backgroundWidth * i)),
-                    'y' : 250
+                    'x' : ((-125 * ((numberOfTiles - 1) / 2)) + (125 * i)),
+                    'y' : 322.5
                 });
 
-                var backgroundRenderer = new SpriteRenderer(background);
-                backgroundRenderer.filePath = 'Images/waves (1).png';
-                backgroundRenderer.spriteWidth = 96;
-                backgroundRenderer.spriteHeight = 96;
-                backgroundRenderer.frameMax = 1;
-                background.AddRenderer(backgroundRenderer);
-                this.sceneObjects.push(background);
+                var spriteRenderer = new SpriteRenderer(waveTile);
+                spriteRenderer.filePath = 'Images/waves (1).png';
+                spriteRenderer.spriteWidth = 180;
+                spriteRenderer.spriteHeight = 360;
+                spriteRenderer.frameMax = 1;
+                waveTile.AddRenderer(spriteRenderer);
+                this.sceneObjects.push(waveTile);
+
+                waveTile.parentObject = waveController1;
+                waveAnimator.spawnedWaves.push(waveTile);
             }
         }
 
+        // Dark Blue Layer (Middle)
+        {
+            // Controller to store all of the individual wave tiles and handle animation
+            var waveController2 = new GameObject("WaveController (2)");
+            this.sceneObjects.push(waveController2);
+
+            var waveAnimator = new WaveAnimatorController(waveController2);
+            waveAnimator.animationSpeed = -40;
+            waveController2.AddComponent(waveAnimator);
+
+            // Spawning individual tiles
+            var numberOfTiles = 19;
+            for (var i = 0; i < numberOfTiles; i++)
+            {
+                var waveTile = new GameObject("WaveTile", this);
+                waveTile.width = 130;
+                waveTile.height = 250;
+
+                waveTile.SetGlobalPos(
+                {
+                    'x' : ((-125 * ((numberOfTiles - 1) / 2)) + (125 * i)),
+                    'y' : 317.5
+                });
+
+                var spriteRenderer = new SpriteRenderer(waveTile);
+                spriteRenderer.filePath = 'Images/waves (2).png';
+                spriteRenderer.spriteWidth = 180;
+                spriteRenderer.spriteHeight = 360;
+                spriteRenderer.frameMax = 1;
+                waveTile.AddRenderer(spriteRenderer);
+                this.sceneObjects.push(waveTile);
+
+                waveTile.parentObject = waveController2;
+                waveAnimator.spawnedWaves.push(waveTile);
+            }
+        }
+
+        // Light Blue Layer (Furthest Forward)
+        {
+            // Controller to store all of the individual wave tiles and handle animation
+            var waveController3 = new GameObject("WaveController (3)");
+            this.sceneObjects.push(waveController3);
+
+            var waveAnimator = new WaveAnimatorController(waveController3);
+            waveAnimator.animationSpeed = -50;
+            waveController3.AddComponent(waveAnimator);
+
+            // Spawning individual tiles
+            var numberOfTiles = 19;
+            for (var i = 0; i < numberOfTiles; i++)
+            {
+                var waveTile = new GameObject("WaveTile", this);
+                waveTile.width = 130;
+                waveTile.height = 250;
+
+                waveTile.SetGlobalPos(
+                {
+                    'x' : ((-125 * ((numberOfTiles - 1) / 2)) + (125 * i)),
+                    'y' : 312.5
+                });
+
+                var spriteRenderer = new SpriteRenderer(waveTile);
+                spriteRenderer.filePath = 'Images/waves (3).png';
+                spriteRenderer.spriteWidth = 180;
+                spriteRenderer.spriteHeight = 360;
+                spriteRenderer.frameMax = 1;
+                waveTile.AddRenderer(spriteRenderer);
+                this.sceneObjects.push(waveTile);
+
+                waveTile.parentObject = waveController3;
+                waveAnimator.spawnedWaves.push(waveTile);
+            }
+        }
 
         /*
         ====================================================================================================

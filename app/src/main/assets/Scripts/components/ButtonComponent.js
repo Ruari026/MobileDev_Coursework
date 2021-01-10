@@ -36,6 +36,7 @@ class ButtonComponent extends Component
         }
 
         // Otherwise check if input is relevant to buttons
+        // Checks for both mobile input (screen touches) & web input (mouse clicks)
         if (event.type == 'touchstart' || event.type == 'mousedown')
         {
             // Storing input position (based on platform)
@@ -127,30 +128,40 @@ class ButtonComponent extends Component
 
     IsWithinRectWorld(inputX, inputY)
     {
-        // Rect in world space
+        // Gameobject center relative to camera pos
+        var gameobjectCenter =
+        {
+            x : ((this.parentGameObject.GetGlobalPos().x - this.parentGameObject.parentScene.sceneCamera.GetGlobalPos().x) * this.parentGameObject.parentScene.sceneCamera.viewScale),
+            y : ((this.parentGameObject.GetGlobalPos().y - this.parentGameObject.parentScene.sceneCamera.GetGlobalPos().y) * this.parentGameObject.parentScene.sceneCamera.viewScale)
+        };
+        // Adjusting for screen space coordinates
+        gameobjectCenter.x += canvasX;
+        gameobjectCenter.y += canvasY;
+
+        // Rect in screen space
         var rectMin =
         {
-            x : (this.parentGameObject.GetGlobalPos().x - (this.parentGameObject.width / 2)) * this.parentGameObject.parentScene.sceneCamera.zoom,
-            y : (this.parentGameObject.GetGlobalPos().y - (this.parentGameObject.height / 2)) * this.parentGameObject.parentScene.sceneCamera.zoom
+            x : (gameobjectCenter.x - ((this.parentGameObject.width / 2) * this.parentGameObject.parentScene.sceneCamera.viewScale)),
+            y : (gameobjectCenter.y - ((this.parentGameObject.height / 2) * this.parentGameObject.parentScene.sceneCamera.viewScale))
         };
 
-        // Getting Screen Space Pos
-        rectMin.x += canvasX - this.parentGameObject.parentScene.sceneCamera.posX;
-        rectMin.y += canvasY - this.parentGameObject.parentScene.sceneCamera.posY;
+        console.info('Input: ' + inputX + ', ' + inputY);
+        //console.info('Gameobject: ' + gameobjectCenter.x + ', ' + gameobjectCenter.y);
+        //console.info('Min: ' + rectMin.x + ', ' + rectMin.y);
 
         // Checking X Axis
-        if((inputX > rectMin.x) && (inputX < rectMin.x + (this.parentGameObject.width * this.parentGameObject.parentScene.sceneCamera.zoom)))
+        if((inputX > rectMin.x) && (inputX < rectMin.x + (this.parentGameObject.width * this.parentGameObject.parentScene.sceneCamera.viewScale)))
         {
             // Checking Y Axis
-            if((inputY > rectMin.y) && (inputY < rectMin.y + (this.parentGameObject.height * this.parentGameObject.parentScene.sceneCamera.zoom)))
+            if((inputY > rectMin.y) && (inputY < rectMin.y + (this.parentGameObject.height * this.parentGameObject.parentScene.sceneCamera.viewScale)))
             {
-                //console.info('Within Rect')
+                console.info('Within Rect')
                 return true;
             }
         }
 
         // Otherwise input was not within button rect
-        //console.info('Outside Rect')
+        console.info('Outside Rect')
         return false;
     }
 
@@ -225,14 +236,9 @@ var TargetButtonEvent =
 
     OnHold : function(inputX, inputY)
     {
-        var input = {
-            x : inputX + this.targetFrog.parentScene.sceneCamera.posX,
-            y : inputY + this.targetFrog.parentScene.sceneCamera.posY
-        };
-
         //console.info("Changing Target Angle");
         // Input position should be passed though as it's position in worldspace
-        this.targetFrog.GetComponent("PlayerController").Aim(input.x, input.y);
+        this.targetFrog.GetComponent("PlayerController").Aim(inputX, inputY);
     },
 
     OnClick : function(inputX, inputY)

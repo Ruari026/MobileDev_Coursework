@@ -43,9 +43,15 @@ class PlayerController extends Component
         // Getting position of frog in screen space
         var screenPos =
         {
-            x : (this.parentGameObject.GetGlobalPos().x * this.parentGameObject.parentScene.sceneCamera.zoom) + canvasX,
-            y : (this.parentGameObject.GetGlobalPos().y * this.parentGameObject.parentScene.sceneCamera.zoom) + canvasY
-        }
+            x : ((this.parentGameObject.GetGlobalPos().x - this.parentGameObject.parentScene.sceneCamera.GetGlobalPos().x) * this.parentGameObject.parentScene.sceneCamera.viewScale),
+            y : ((this.parentGameObject.GetGlobalPos().y - this.parentGameObject.parentScene.sceneCamera.GetGlobalPos().y) * this.parentGameObject.parentScene.sceneCamera.viewScale)
+        };
+        // Adjusting for screen space coordinates
+        screenPos.x += canvasX;
+        screenPos.y += canvasY;
+
+        //console.info('Input Aiming: ' + mouseX + ', ' + mouseY);
+        //console.info('Gameobject Aiming: ' + screenPos.x + ', ' + screenPos.y);
 
         // Direction of mouse relative to frog
         var direction =

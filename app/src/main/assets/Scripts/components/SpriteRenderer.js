@@ -65,8 +65,8 @@ class SpriteRenderer extends Component
         // Getting the gameobject's position & size relative to the camera
         var spriteCenter =
         {
-            x : ((this.parentGameObject.GetGlobalPos().x - camera.GetGlobalPos().x) * camera.zoom),
-            y : ((this.parentGameObject.GetGlobalPos().y - camera.GetGlobalPos().y) * camera.zoom)
+            x : ((this.parentGameObject.GetGlobalPos().x - camera.GetGlobalPos().x) * camera.viewScale),
+            y : ((this.parentGameObject.GetGlobalPos().y - camera.GetGlobalPos().y) * camera.viewScale)
         }
 
         // Canvas Transformation for flipping sprites
@@ -98,11 +98,11 @@ class SpriteRenderer extends Component
         }
 
         // Adjusting position to set draw pos relative to sprite size
-        var screenPosX = spriteCenter.x - ((this.parentGameObject.width / 2) * camera.zoom);
-        var screenPosY = spriteCenter.y - ((this.parentGameObject.height / 2) * camera.zoom);
+        var screenPosX = spriteCenter.x - ((this.parentGameObject.width / 2) * camera.viewScale);
+        var screenPosY = spriteCenter.y - ((this.parentGameObject.height / 2) * camera.viewScale);
 
-        var screenSpaceWidth = this.parentGameObject.width * camera.zoom;
-        var screenSpaceHeight = this.parentGameObject.height * camera.zoom;
+        var screenSpaceWidth = this.parentGameObject.width * camera.viewScale;
+        var screenSpaceHeight = this.parentGameObject.height * camera.viewScale;
 
         canvasContext.drawImage(this.img, (this.spriteWidth * 0) + this.offsetX, (this.spriteHeight * this.currentFrame) + this.offsetY, this.spriteWidth, this.spriteHeight, screenPosX, screenPosY, screenSpaceWidth, screenSpaceHeight);
 
