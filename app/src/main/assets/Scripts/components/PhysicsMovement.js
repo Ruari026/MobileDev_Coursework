@@ -265,17 +265,40 @@ var BulletCollisionBehaviour =
         var parentScene = hitCollider.parentGameObject.parentScene;
         var sceneController = parentScene.GetSceneObject("Scene Manager");
 
-        // Checking to see if the hit object was a Tile or the other player
-        var hitObjectName = hitCollider.parentGameObject.gameObjectName;
-        if (hitObjectName == "Tile")
+        // Gets all of the objects within the hit point
+        var nearbyObjects = [];
+        var sceneColliders = currentScene.GetSceneColliders();
+        for (var i = 0; i < sceneColliders.length; i++)
         {
-            // Projectile hit a tile, tiles can just be destroyed
-            console.info("Attempting to destroy: " + hitCollider.parentGameObject.gameObjectName);
-            parentScene.DestroyObject(hitCollider.parentGameObject);
+            var direction =
+            {
+                x : (ownCollider.parentGameObject.GetGlobalPos().x - sceneColliders[i].parentGameObject.GetGlobalPos().x),
+                y : (ownCollider.parentGameObject.GetGlobalPos().y - sceneColliders[i].parentGameObject.GetGlobalPos().y)
+            };
+
+            var distance = (direction.x * direction.x) + (direction.y * direction.y);
+            distance = Math.sqrt(distance);
+            if (distance < 50)
+            {
+                nearbyObjects.push(sceneColliders[i]);
+            }
         }
-        else if (hitObjectName == "Player 1" || hitObjectName == "Player 2")
+
+        for (var i = 0; i < nearbyObjects.length; i++)
         {
-            // Can check for both players since projectiles source player can't be hit due to collision layers
+            // Checking to see if the nearby objects were a Tiles or the other player
+            var hitObjectName = nearbyObjects[i].parentGameObject.gameObjectName;
+            if (hitObjectName == "Tile")
+            {
+                // Projectile hit a tile, tiles can just be destroyed
+                console.info("Attempting to destroy: " + nearbyObjects[i].parentGameObject.gameObjectName);
+                parentScene.DestroyObject(nearbyObjects[i].parentGameObject);
+            }
+            else if (hitObjectName == "Player 1" || hitObjectName == "Player 2")
+            {
+                // Can check for both players since projectiles source player can't be hit due to collision layers
+                // Damages other player for 20 damage
+            }
         }
 
         // Tells the scene to start the next turn

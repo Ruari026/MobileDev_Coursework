@@ -145,7 +145,7 @@ class ButtonComponent extends Component
             y : (gameobjectCenter.y - ((this.parentGameObject.height / 2) * this.parentGameObject.parentScene.sceneCamera.viewScale))
         };
 
-        console.info('Input: ' + inputX + ', ' + inputY);
+        //console.info('Input: ' + inputX + ', ' + inputY);
         //console.info('Gameobject: ' + gameobjectCenter.x + ', ' + gameobjectCenter.y);
         //console.info('Min: ' + rectMin.x + ', ' + rectMin.y);
 

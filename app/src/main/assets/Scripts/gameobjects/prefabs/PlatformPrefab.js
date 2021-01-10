@@ -3,9 +3,12 @@ class PlatformPrefab extends GameObject
     platformWidth = 21;
     platformHeight = 3;
 
-    constructor(name, scene)
+    constructor(name, scene, width, height)
     {
         super(name, scene);
+
+        this.platformWidth = width;
+        this.platformHeight = height;
 
         for (var h = 1; h <= this.platformHeight; h++)
         {

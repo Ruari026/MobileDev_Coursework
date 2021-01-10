@@ -3,7 +3,8 @@ const GameState = Object.freeze({
     STATE_PROJECTILEFIRED : "STATE_PROJECTILEFIRED",
     STATE_FROGJUMPING : "STATE_FROGJUMPING",
     STATE_TURNEND : "STATE_TURNEND",
-    STATE_PAUSED : "STATE_PAUSED"
+    STATE_PAUSED : "STATE_PAUSED",
+    STATE_GAMEOVER :"STATE_GAMEOVER"
 })
 
 class GameManager extends Component
@@ -18,14 +19,18 @@ class GameManager extends Component
     player2 = null;
     sceneCamera = null;
 
-    // Scene Buttons
+    // Scene UI
+    // Text
+    timerText = null;
+    // Buttons
     jumpButton = null;
     fireButton = null;
 
     // Controlling player turns
+    turnTimer = 30;
     isPlayer1 = true;
     currentPlayer = null;
-    turnChangeTimer = 0;
+    stateTimer = 0;
 
 
     /*
@@ -45,6 +50,17 @@ class GameManager extends Component
         {
             case (GameState.STATE_TURNSTART):
             {
+                // Turn timer reduces against real time
+                this.turnTimer -= deltaTime;
+
+                // Updating
+                this.timerText.text = Math.ceil(this.turnTimer);
+
+                // If the turn timer has run out of time then the next player gets to move
+                if (this.turnTimer <= 0)
+                {
+                    this.SwitchState(GameState.STATE_TURNEND);
+                }
             }
             break;
 
@@ -64,8 +80,8 @@ class GameManager extends Component
                 if (movementMagnitude < 5)
                 {
                     // Player needs to have stopped for a few seconds before they can move again or shoot
-                    this.turnChangeTimer += deltaTime;
-                    if (this.turnChangeTimer > 0.25)
+                    this.stateTimer += deltaTime;
+                    if (this.stateTimer > 0.25)
                     {
                         this.SwitchState(GameState.STATE_TURNEND);
                     }
@@ -73,7 +89,7 @@ class GameManager extends Component
                 else
                 {
                     // Reset timer as player is still in motion
-                    this.turnChangeTimer = 0;
+                    this.stateTimer = 0;
 
                     // Also zoom camera out (to a max of 2)
                 }
@@ -82,6 +98,28 @@ class GameManager extends Component
 
             case (GameState.STATE_TURNEND):
             {
+                // State should wait for a few seconds before switching control to other player
+                this.stateTimer += deltaTime;
+                if (this.stateTimer < 2.5)
+                {
+                    return;
+                }
+
+                // Switching control over to the other player
+                if (this.isPlayer1)
+                {
+                    // Next is player 2s turn
+                    this.currentPlayer = this.player2;
+                    this.isPlayer1 = false;
+                }
+                else
+                {
+                    // Next is player 1s turn
+                    this.currentPlayer = this.player1;
+                    this.isPlayer1 = true;
+                }
+                // Start the next turn
+                this.SwitchState(GameState.STATE_TURNSTART);
             }
             break;
 
@@ -103,6 +141,9 @@ class GameManager extends Component
             {
                 // Setting time scale to 1 "Unpauses" the game
                 timeScale = 1;
+                // Also sets the turn timer back to it's max value (+ resets UI)
+                this.turnTimer = 30;
+                this.timerText.text = Math.ceil(this.turnTimer);
 
                 // Ensures that the gameplay buttons can be interacted with again
                 this.jumpButton.GetComponent("ButtonComponent").DisableButton(false);
@@ -143,7 +184,7 @@ class GameManager extends Component
                 this.fireButton.GetComponent("ButtonComponent").DisableButton(true);
 
                 // Ensuring that the turn change timer is reset
-                this.turnChangeTimer = 0;
+                this.stateTimer = 0;
 
                 // Hide the targeting reticle on the current player
                 this.currentPlayer.GetComponent("PlayerController").theReticle.active = false;
@@ -152,22 +193,8 @@ class GameManager extends Component
 
             case (GameState.STATE_TURNEND):
             {
-                // Switching control over to the other player
-                if (this.isPlayer1)
-                {
-                    // Next is player 2s turn
-                    this.currentPlayer = this.player2;
-                    this.isPlayer1 = false;
-                }
-                else
-                {
-                    // Next is player 1s turn
-                    this.currentPlayer = this.player1;
-                    this.isPlayer1 = true;
-                }
-
-                // Start the next turn
-                this.SwitchState(GameState.STATE_TURNSTART);
+                // Resetting the state timer so that the scene can wait a few seconds before switching control to the other player
+                this.stateTimer = 0;
             }
             break;
 

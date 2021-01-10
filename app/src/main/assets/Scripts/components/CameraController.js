@@ -35,8 +35,17 @@ class CameraController extends Component
             var newX = (currentPosX + (deltaTime * this.moveSpeed) * (targetPosX - currentPosX));
             var newY = (currentPosY + (deltaTime * this.moveSpeed) * (targetPosY - currentPosY));
 
-            this.parentGameObject.posX = newX;
-            this.parentGameObject.posY = newY;
+            // Checks that the camera doesn't go out of the game area
+            // X Axis has limits for the left and right sides of the screen
+            if (newX > - 500 && newX < 500)
+            {
+                this.parentGameObject.posX = newX;
+            }
+            // Y Axis only has a limit on the bottom of the screen (positive due to screen coordinates)
+            if (newY < 100)
+            {
+                this.parentGameObject.posY = newY;
+            }
         }
         else
         {

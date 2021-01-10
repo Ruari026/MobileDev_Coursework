@@ -78,24 +78,26 @@ class GameplayScene extends GameScene
         */
         {
             // Adding Starting Platforms
-            // Bottom Left
-            var newPlatform = new PlatformPrefab("Bottom Left Platform", this);
+            // Bottom Platform
+            var newPlatform = new PlatformPrefab("Bottom Left Platform", this, 21, 5);
             //newPlatform.posX = -200;
             newPlatform.posY = 200;
             this.sceneObjects.push(newPlatform);
-            // Bottom Right
-            newPlatform = new PlatformPrefab("Bottom Right Platform", this);
+
+            // Top Roof
+            newPlatform = new PlatformPrefab("Bottom Right Platform", this, 11, 3);
             //newPlatform.posX = 200;
             newPlatform.posY = -200;
             this.sceneObjects.push(newPlatform);
 
-            // Top Left
-            var newPlatform = new WallPrefab("Top Left Platform", this);
+            // Left Wall
+            var newPlatform = new WallPrefab("Top Left Platform", this, 3, 13);
             newPlatform.posX = -300;
             //newPlatform.posY = 150;
             this.sceneObjects.push(newPlatform);
-            // Top Right
-            newPlatform = new WallPrefab("Top Right Platform", this);
+
+            // Right Wall
+            newPlatform = new WallPrefab("Top Right Platform", this, 3, 13);
             newPlatform.posX = 300;
             //newPlatform.posY = 150;
             this.sceneObjects.push(newPlatform);
@@ -143,7 +145,7 @@ class GameplayScene extends GameScene
             waveController1.AddComponent(waveAnimator);
 
             // Spawning individual tiles
-            var numberOfTiles = 19;
+            var numberOfTiles = 24;
             for (var i = 0; i < numberOfTiles; i++)
             {
                 var waveTile = new GameObject("WaveTile", this);
@@ -180,7 +182,7 @@ class GameplayScene extends GameScene
             waveController2.AddComponent(waveAnimator);
 
             // Spawning individual tiles
-            var numberOfTiles = 19;
+            var numberOfTiles = 24;
             for (var i = 0; i < numberOfTiles; i++)
             {
                 var waveTile = new GameObject("WaveTile", this);
@@ -217,7 +219,7 @@ class GameplayScene extends GameScene
             waveController3.AddComponent(waveAnimator);
 
             // Spawning individual tiles
-            var numberOfTiles = 19;
+            var numberOfTiles = 24;
             for (var i = 0; i < numberOfTiles; i++)
             {
                 var waveTile = new GameObject("WaveTile", this);
@@ -345,19 +347,78 @@ class GameplayScene extends GameScene
         // UI Text
         {
             // Turn Timer
-            var testText = new GameObject('Test Text Renderer', this);
-            testText.posX = 0;
-            testText.posY = 75;
-            testText.anchorX = 0.5;
-            testText.anchorY = 0;
+            var timerText = new GameObject('Timer Text', this);
+            timerText.posX = 0;
+            timerText.posY = 75;
+            timerText.anchorX = 0.5;
+            timerText.anchorY = 0;
 
-            var textRenderer = new TextRenderer(testText);
+            var textRenderer = new TextRenderer(timerText);
             textRenderer.text = "- XX -";
             textRenderer.textAlign = 'center';
             textRenderer.fontSize = 36;
-            testText.AddRenderer(textRenderer, 10);
+            timerText.AddRenderer(textRenderer, 10);
 
-            this.sceneObjects.push(testText);
+            managerComponent.timerText = textRenderer;
+            this.sceneObjects.push(timerText);
+
+
+            // Player 1 Texts
+            {
+                // Name Text
+                var playerText = new GameObject('Player Name Text', this);
+                playerText.posX = 25;
+                playerText.posY = 50;
+                playerText.anchorX = 0;
+                playerText.anchorY = 0;
+                textRenderer = new TextRenderer(playerText);
+                textRenderer.text = "Player 1";
+                textRenderer.fontSize = 18;
+                playerText.AddRenderer(textRenderer, 10);
+                this.sceneObjects.push(playerText);
+
+                // Health Text
+                playerText = new GameObject('Player Health Text', this);
+                playerText.posX = 25;
+                playerText.posY = 87.5;
+                playerText.anchorX = 0;
+                playerText.anchorY = 0;
+                textRenderer = new TextRenderer(playerText);
+                textRenderer.text = "HP: 100";
+                textRenderer.fontSize = 18;
+                playerText.AddRenderer(textRenderer, 10);
+                this.sceneObjects.push(playerText);
+            }
+
+
+            // Player 2 Texts
+            {
+                // Name Text
+                var playerText = new GameObject('Player Name Text', this);
+                playerText.posX = -25;
+                playerText.posY = 50;
+                playerText.anchorX = 1;
+                playerText.anchorY = 0;
+                textRenderer = new TextRenderer(playerText);
+                textRenderer.text = "Player 2";
+                textRenderer.textAlign = 'end';
+                textRenderer.fontSize = 18;
+                playerText.AddRenderer(textRenderer, 10);
+                this.sceneObjects.push(playerText);
+                
+                // Health Text
+                playerText = new GameObject('Player Health Text', this);
+                playerText.posX = -25;
+                playerText.posY = 87.5;
+                playerText.anchorX = 1;
+                playerText.anchorY = 0;
+                textRenderer = new TextRenderer(playerText);
+                textRenderer.text = "HP: 100";
+                textRenderer.textAlign = 'end';
+                textRenderer.fontSize = 18;
+                playerText.AddRenderer(textRenderer, 10);
+                this.sceneObjects.push(playerText);
+            }
         }
     }
 }

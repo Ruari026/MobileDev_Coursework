@@ -16,6 +16,12 @@ class PlayerController extends Component
     currentChargeTime = 0;
     maxChargeTime = 0.25;
 
+    // Player Health Details
+    playerHealth = 100;
+
+    // Player reset details
+    turnStartPos = { x : 0, y : 0};
+
 
     /*
     ====================================================================================================
@@ -29,7 +35,12 @@ class PlayerController extends Component
 
     Update()
     {
-
+        // Checks to see if the player has fallen out of bounds
+        var playerPos = this.parentGameObject.GetGlobalPos();
+        if (playerPos.y > 500)
+        {
+            this.ResetPlayer();
+        }
     }
 
 
@@ -142,6 +153,9 @@ class PlayerController extends Component
     */
     Jump()
     {
+        // Save's the player's position incase they jump out of bounds
+        this.turnStartPos = this.parentGameObject.GetGlobalPos();
+
         // Direction determined by reticle direction
         var direction = this.theReticle.GetLocalPos();
         direction.x /= this.reticleOffsetMagnitude;
@@ -187,5 +201,38 @@ class PlayerController extends Component
 
         // Reset Charge Meter
         this.ResetCharge();
+    }
+
+
+    /*
+    ====================================================================================================
+    Handling Player Health
+    ====================================================================================================
+    */
+    ResetPlayer()
+    {
+        // Player has fallen out of bounds
+        // Moves the player back to the position that they were in before jumping
+        this.parentGameObject.SetGlobalPos(this.turnStartPos);
+
+        // Resets player's velocity
+        this.parentGameObject.GetComponent("PhysicsMovement").speedX = 0;
+        this.parentGameObject.GetComponent("PhysicsMovement").speedY = 0;
+
+        // Reset also damages player for 33 health
+        this.DamagePlayer(33);
+    }
+
+    DamagePlayer(damageAmount)
+    {
+        this.playerHealth -= damageAmount;
+
+        // If the player's power is less than 0 then the game should go to the game over screen
+        if (this.playerHealth <= 0)
+        {
+            // Game Manager handles game over transition animation
+
+            // Tells the game data which player won the game
+        }
     }
 }
