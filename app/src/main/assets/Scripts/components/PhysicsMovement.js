@@ -286,18 +286,23 @@ var BulletCollisionBehaviour =
 
         for (var i = 0; i < nearbyObjects.length; i++)
         {
-            // Checking to see if the nearby objects were a Tiles or the other player
-            var hitObjectName = nearbyObjects[i].parentGameObject.gameObjectName;
-            if (hitObjectName == "Tile")
+            // Checks against collision layers first
+            if (ownCollider.layersToIgnore.includes(nearbyObjects[i].colliderLayer) == false)
             {
-                // Projectile hit a tile, tiles can just be destroyed
-                console.info("Attempting to destroy: " + nearbyObjects[i].parentGameObject.gameObjectName);
-                parentScene.DestroyObject(nearbyObjects[i].parentGameObject);
-            }
-            else if (hitObjectName == "Player 1" || hitObjectName == "Player 2")
-            {
-                // Can check for both players since projectiles source player can't be hit due to collision layers
-                // Damages other player for 20 damage
+                // Checking to see if the nearby objects were a Tiles or the other player
+                var nearbyName = nearbyObjects[i].parentGameObject.gameObjectName;
+                if (nearbyName == "Tile")
+                {
+                    // Projectile hit a tile, tiles can just be destroyed
+                    console.info("Attempting to destroy: " + nearbyObjects[i].parentGameObject.gameObjectName);
+                    parentScene.DestroyObject(nearbyObjects[i].parentGameObject);
+                }
+                else if (nearbyName == "Player 1" || nearbyName == "Player 2")
+                {
+                    // Can check for both players since projectiles source player can't be hit due to collision layers
+                    // Damages other player for 20 damage
+                    nearbyObjects[i].parentGameObject.GetComponent("PlayerController").DamagePlayer(20);
+                }
             }
         }
 

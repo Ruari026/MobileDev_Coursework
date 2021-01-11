@@ -18,6 +18,7 @@ class PlayerController extends Component
 
     // Player Health Details
     playerHealth = 100;
+    playerHealthUI = null;
 
     // Player reset details
     turnStartPos = { x : 0, y : 0};
@@ -30,7 +31,8 @@ class PlayerController extends Component
     */
     Start()
     {
-
+        // Sets the player's health UI to show the player's starting health
+        this.playerHealthUI.text = 'HP: ' + this.playerHealth;
     }
 
     Update()
@@ -226,6 +228,9 @@ class PlayerController extends Component
     DamagePlayer(damageAmount)
     {
         this.playerHealth -= damageAmount;
+
+        // Updates the player's health UI
+        this.playerHealthUI.text = 'HP: ' + this.playerHealth;
 
         // If the player's power is less than 0 then the game should go to the game over screen
         if (this.playerHealth <= 0)

@@ -30,5 +30,11 @@ class ProjectilePrefab extends GameObject
         physicsHandler.layersToIgnore.push('Projectile');
         physicsHandler.collisionEvent = BulletCollisionBehaviour;
         this.AddComponent(physicsHandler);
+
+        // Animation Handling
+        var controller = new ProjectileController(this);
+        controller.projectileRenderer = newRenderer;
+        controller.projectilePhysics = physicsHandler;
+        this.AddComponent(controller);
     }
 }

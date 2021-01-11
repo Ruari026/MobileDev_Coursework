@@ -109,25 +109,23 @@ class GameplayScene extends GameScene
         Player Characters (Exists on the mid-ground layer)
         ====================================================================================================
         */
-        {
-            // Adding player characters to the scene
-             var frog1 = new PlayerFrog("Player 1", this);
-             frog1.SetGlobalPos({x : -150, y : -75});
-             // Ensuring that the player 1 frog start facing right
-             frog1.GetRenderer().flipX = false;
-             this.sceneObjects.push(frog1);
+        // Adding player characters to the scene
+        var frog1 = new PlayerFrog("Player 1", this);
+        frog1.SetGlobalPos({x : -150, y : -75});
+        // Ensuring that the player 1 frog start facing right
+        frog1.GetRenderer().flipX = false;
+        this.sceneObjects.push(frog1);
 
-             var frog2 = new PlayerFrog("Player 2", this);
-             frog2.SetGlobalPos({x : 150, y : -75});
-             // Ensuring that the player 2 frog start facing left
-             frog2.GetRenderer().flipX = true;
-             this.sceneObjects.push(frog2);
+        var frog2 = new PlayerFrog("Player 2", this);
+        frog2.SetGlobalPos({x : 150, y : -75});
+        // Ensuring that the player 2 frog start facing left
+        frog2.GetRenderer().flipX = true;
+        this.sceneObjects.push(frog2);
 
-             // Letting the scene manager know about the player frogs
-             managerComponent.player1 = frog1;
-             managerComponent.player2 = frog2;
-             managerComponent.currentPlayer = frog1;
-        }
+        // Letting the scene manager know about the player frogs
+        managerComponent.player1 = frog1;
+        managerComponent.player2 = frog2;
+        managerComponent.currentPlayer = frog1;
 
         /*
         ====================================================================================================
@@ -384,10 +382,11 @@ class GameplayScene extends GameScene
                 playerText.anchorX = 0;
                 playerText.anchorY = 0;
                 textRenderer = new TextRenderer(playerText);
-                textRenderer.text = "HP: 100";
+                textRenderer.text = "HP: XXX";
                 textRenderer.fontSize = 18;
                 playerText.AddRenderer(textRenderer, 10);
                 this.sceneObjects.push(playerText);
+                frog1.GetComponent("PlayerController").playerHealthUI = textRenderer;
             }
 
 
@@ -405,7 +404,7 @@ class GameplayScene extends GameScene
                 textRenderer.fontSize = 18;
                 playerText.AddRenderer(textRenderer, 10);
                 this.sceneObjects.push(playerText);
-                
+
                 // Health Text
                 playerText = new GameObject('Player Health Text', this);
                 playerText.posX = -25;
@@ -413,11 +412,12 @@ class GameplayScene extends GameScene
                 playerText.anchorX = 1;
                 playerText.anchorY = 0;
                 textRenderer = new TextRenderer(playerText);
-                textRenderer.text = "HP: 100";
+                textRenderer.text = "HP: XXX";
                 textRenderer.textAlign = 'end';
                 textRenderer.fontSize = 18;
                 playerText.AddRenderer(textRenderer, 10);
                 this.sceneObjects.push(playerText);
+                frog2.GetComponent("PlayerController").playerHealthUI = textRenderer;
             }
         }
     }
