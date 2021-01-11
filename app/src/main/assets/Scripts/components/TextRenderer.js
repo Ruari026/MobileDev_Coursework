@@ -2,7 +2,7 @@ class TextRenderer extends Component
 {
     componentName = "TextRenderer";
 
-    font = 'sans-serif';
+    font = 'forest_thing';
     fontSize = 10;
     text = '';
     textAlign = 'start';
@@ -17,6 +17,7 @@ class TextRenderer extends Component
     */
     Start()
     {
+        var junction_font = new FontFace('Junction Regular', 'url(fonts/junction-regular.woff)');
     }
 
     Draw(camera)
