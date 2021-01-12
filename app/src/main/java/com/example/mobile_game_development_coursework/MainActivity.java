@@ -9,15 +9,9 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity
 {
-    /*
-        @Override
-        protected void onCreate(Bundle savedInstanceState)
-        {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
-        }
-     */
     WebView webView;
+    iSound iS;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +20,6 @@ public class MainActivity extends AppCompatActivity
         // set IMMERSIVE flag;
         //set the content to appear under the system so that the content
         // doesn't resize when the system bars hide and show
-
         int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -36,11 +29,13 @@ public class MainActivity extends AppCompatActivity
         decorView.setSystemUiVisibility(uiOptions);
 
         setContentView(R.layout.activity_main);
+        iS = new iSound(getApplicationContext());
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         webView = (WebView)findViewById(R.id.webview1);
-
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl("file:///android_asset/game.html");
+
+        webView.addJavascriptInterface(iS, "soundManager");
     }
 }

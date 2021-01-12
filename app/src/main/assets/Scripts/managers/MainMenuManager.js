@@ -30,12 +30,23 @@ class MainMenuManager extends Component
     */
     OpenMainMenu()
     {
+        if (soundManager != null)
+        {
+            soundManager.PlaySound(0);
+        }
+
         this.mainMenuParent.active = true;
         this.instructionsParent.active = false;
     }
 
     OpenInstructions()
     {
+        if (soundManager != null)
+        {
+            console.info("Main Menu Manager: Say Hello");
+            soundManager.PlaySound(0);
+        }
+
         this.mainMenuParent.active = false;
         this.instructionsParent.active = true;
     }

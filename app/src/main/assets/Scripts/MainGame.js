@@ -9,6 +9,7 @@ var canvasY;
 
 // Game Managers
 var sceneManager = null;
+var soundManager;
 
 // Time Management
 var deltaTime = 0;
