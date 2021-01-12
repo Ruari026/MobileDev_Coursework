@@ -267,7 +267,7 @@ class GameplayScene extends GameScene
 
             var buttonController = new ButtonComponent(pauseButton);
             buttonController.targetRenderer = buttonRenderer;
-            buttonController.buttonBehaviour = CameraButtonEvent;
+            //buttonController.buttonBehaviour = CameraButtonEvent;
             pauseButton.AddComponent(buttonController);
 
             this.sceneObjects.push(pauseButton);

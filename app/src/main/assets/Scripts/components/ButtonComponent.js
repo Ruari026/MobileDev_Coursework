@@ -200,6 +200,8 @@ var StartGameButtonEvent =
     OnClick : function(inputX, inputY)
     {
         console.info("Starting Game");
+
+        ChangeScene("Gameplay");
     }
 }
 
@@ -213,6 +215,10 @@ var OpenInstructionsButtonEvent =
     OnClick : function(inputX, inputY)
     {
         console.info("Opening Instructions");
+
+        // Gets the Main Menu Controller in the scene & opens the instructions UI
+        var mainMenuController = currentScene.GetSceneObject("Main Menu Controller").GetComponent("MainMenuManager");
+        mainMenuController.OpenInstructions();
     }
 }
 
@@ -226,6 +232,10 @@ var CloseInstructionsButtonEvent =
     OnClick : function(inputX, inputY)
     {
         console.info("Closing Instructions");
+
+        // Gets the Main Menu Controller in the scene & opens the main menu UI
+        var mainMenuController = currentScene.GetSceneObject("Main Menu Controller").GetComponent("MainMenuManager");
+        mainMenuController.OpenMainMenu();
     }
 }
 

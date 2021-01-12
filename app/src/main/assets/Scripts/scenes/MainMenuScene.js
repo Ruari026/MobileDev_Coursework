@@ -23,6 +23,19 @@ class MainMenuScene extends GameScene
 
         /*
         ====================================================================================================
+        Scene Controller
+        ====================================================================================================
+        */
+        var sceneController = new GameObject("Main Menu Controller", this);
+
+        var theController = new MainMenuManager(sceneController);
+        sceneController.AddComponent(theController);
+
+        this.sceneObjects.push(sceneController);
+
+
+        /*
+        ====================================================================================================
         Scene Background
         ====================================================================================================
         */
@@ -64,7 +77,11 @@ class MainMenuScene extends GameScene
             this.sceneObjects.push(menuParent);
 
             var instructionsParent = new GameObject("Instructions Menu Parent");
+            instructionsParent.active = false;
             this.sceneObjects.push(instructionsParent);
+
+            theController.mainMenuParent = menuParent;
+            theController.instructionsParent = instructionsParent;
 
             // Main Menu Elements
             // Menu Title
@@ -81,7 +98,7 @@ class MainMenuScene extends GameScene
                 textRenderer.textColor = '#303030';
                 textRenderer.textAlign = 'center';
                 menuTitle.AddRenderer(textRenderer, 10);
-                this.sceneObjects.push(menuTitle);
+                menuParent.children.push(menuTitle);
 
                 // Foreground Layer
                 menuTitle = new GameObject('Title Background Text', this);
@@ -95,7 +112,7 @@ class MainMenuScene extends GameScene
                 textRenderer.textColor = '#E1E1E1';
                 textRenderer.textAlign = 'center';
                 menuTitle.AddRenderer(textRenderer, 10);
-                this.sceneObjects.push(menuTitle);
+                menuParent.children.push(menuTitle);
             }
             // Menu Buttons
             {
@@ -131,7 +148,7 @@ class MainMenuScene extends GameScene
                     childText.AddRenderer(textRenderer);
 
                     startButton.children.push(childText);
-                    this.sceneObjects.push(startButton);
+                    menuParent.children.push(startButton);
                 }
 
                 // Instructions Button
@@ -166,7 +183,7 @@ class MainMenuScene extends GameScene
                     childText.AddRenderer(textRenderer);
 
                     instructionsButton.children.push(childText);
-                    this.sceneObjects.push(instructionsButton);
+                    menuParent.children.push(instructionsButton);
                 }
             }
 
@@ -175,7 +192,7 @@ class MainMenuScene extends GameScene
             // Instructions Title
             {
                 // Background Layer
-                var menuTitle = new GameObject('Title Background Text', this);
+                /*var menuTitle = new GameObject('Title Background Text', this);
                 menuTitle.posX = 0;
                 menuTitle.posY = -25;
                 menuTitle.anchorX = 0.5;
@@ -186,7 +203,7 @@ class MainMenuScene extends GameScene
                 textRenderer.textColor = '#303030';
                 textRenderer.textAlign = 'center';
                 menuTitle.AddRenderer(textRenderer, 10);
-                this.sceneObjects.push(menuTitle);
+                instructionsParent.children.push(menuTitle);
 
                 // Foreground Layer
                 menuTitle = new GameObject('Title Background Text', this);
@@ -200,7 +217,7 @@ class MainMenuScene extends GameScene
                 textRenderer.textColor = '#E1E1E1';
                 textRenderer.textAlign = 'center';
                 menuTitle.AddRenderer(textRenderer, 10);
-                this.sceneObjects.push(menuTitle);
+                instructionsParent.children.push(menuTitle);*/
             }
             // Back Button
             {
@@ -234,7 +251,7 @@ class MainMenuScene extends GameScene
                 childText.AddRenderer(textRenderer);
 
                 returnButton.children.push(childText);
-                this.sceneObjects.push(returnButton);
+                instructionsParent.children.push(returnButton);
             }
         }
     }
