@@ -19,8 +19,10 @@ class GameplayScene extends GameScene
         newCamera.SetGlobalPos({'x' : -0, 'y' : -0});
         this.sceneCamera = newCamera;
         this.sceneObjects.push(newCamera);
+
         // Ensuring that the camera starts at it's default zoom value (this also calculates the screen scaling for rendering across multiple devices)
         this.sceneCamera.SetCameraZoom(1.0);
+
         // Controller to allow camera to follow other objects in the scene
         var cameraController = new CameraController(newCamera);
         newCamera.AddComponent(cameraController);
@@ -250,25 +252,25 @@ class GameplayScene extends GameScene
         */
         // UI Buttons
         {
-            // Camera Button
-            var cameraButton = new GameObject('Camera Button', this);
-            cameraButton.posX = 47.5;
-            cameraButton.posY = -47.5;
-            cameraButton.width = 75;
-            cameraButton.height = 75;
-            cameraButton.anchorX = 0;
-            cameraButton.anchorY = 1;
+            // Pause Button
+            var pauseButton = new GameObject('Pause Button', this);
+            pauseButton.posX = 47.5;
+            pauseButton.posY = -47.5;
+            pauseButton.width = 75;
+            pauseButton.height = 75;
+            pauseButton.anchorX = 0;
+            pauseButton.anchorY = 1;
 
-            var buttonRenderer = new UIRenderer(cameraButton);
-            buttonRenderer.filePath = 'Images/camera.png';
-            cameraButton.AddRenderer(buttonRenderer, 10);
+            var buttonRenderer = new UIRenderer(pauseButton);
+            buttonRenderer.filePath = 'Images/pause.png';
+            pauseButton.AddRenderer(buttonRenderer, 10);
 
-            var buttonController = new ButtonComponent(cameraButton);
+            var buttonController = new ButtonComponent(pauseButton);
             buttonController.targetRenderer = buttonRenderer;
             buttonController.buttonBehaviour = CameraButtonEvent;
-            cameraButton.AddComponent(buttonController);
+            pauseButton.AddComponent(buttonController);
 
-            this.sceneObjects.push(cameraButton);
+            this.sceneObjects.push(pauseButton);
 
             // Jump Button
             var jumpButton = new GameObject('Jump Button', this);
@@ -351,7 +353,7 @@ class GameplayScene extends GameScene
             timerText.anchorX = 0.5;
             timerText.anchorY = 0;
 
-            var textRenderer = new TextRenderer(timerText);
+            textRenderer = new TextRenderer(timerText);
             textRenderer.text = "- XX -";
             textRenderer.textAlign = 'center';
             textRenderer.fontSize = 36;
@@ -369,7 +371,7 @@ class GameplayScene extends GameScene
                 playerText.posY = 50;
                 playerText.anchorX = 0;
                 playerText.anchorY = 0;
-                textRenderer = new TextRenderer(playerText);
+                var textRenderer = new TextRenderer(playerText);
                 textRenderer.text = "Player 1";
                 textRenderer.fontSize = 18;
                 playerText.AddRenderer(textRenderer, 10);

@@ -73,7 +73,7 @@ function Init()
     // Starting Game Info
     prevTime = Date.now();
     // Ensures that the game starts in the main menu scene
-    ChangeScene("Gameplay");
+    ChangeScene("MainMenu");
 }
 
 function ResizeCanvas()

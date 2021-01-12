@@ -187,10 +187,10 @@ class ButtonComponent extends Component
 
 /*
 ====================================================================================================
-Individual Button Behaviours
+Main Menu Button Behaviours
 ====================================================================================================
 */
-var CameraButtonEvent =
+var StartGameButtonEvent =
 {
     OnHold : function(inputX, inputY)
     {
@@ -199,10 +199,42 @@ var CameraButtonEvent =
 
     OnClick : function(inputX, inputY)
     {
-        console.info("Changing Camera View");
+        console.info("Starting Game");
     }
 }
 
+var OpenInstructionsButtonEvent =
+{
+    OnHold : function(inputX, inputY)
+    {
+
+    },
+
+    OnClick : function(inputX, inputY)
+    {
+        console.info("Opening Instructions");
+    }
+}
+
+var CloseInstructionsButtonEvent =
+{
+    OnHold : function(inputX, inputY)
+    {
+
+    },
+
+    OnClick : function(inputX, inputY)
+    {
+        console.info("Closing Instructions");
+    }
+}
+
+
+/*
+====================================================================================================
+Gameplay Scene Button Behaviours
+====================================================================================================
+*/
 var JumpButtonEvent =
 {
     sceneController : null,

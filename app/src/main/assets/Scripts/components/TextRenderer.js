@@ -6,9 +6,11 @@ class TextRenderer extends Component
     fontSize = 10;
     text = '';
     textAlign = 'start';
+    textColor = '#000000';
 
     maxWidth = 0;
 
+    isScreenSpace = true;
 
     /*
     ====================================================================================================
@@ -22,24 +24,35 @@ class TextRenderer extends Component
 
     Draw(camera)
     {
-        var screenPosX = (canvas.width * this.parentGameObject.anchorX);
-        screenPosX += (this.parentGameObject.GetGlobalPos().x - (this.parentGameObject.width / 2));
+        var posX = 0;
+        var posY = 0;
 
-        var screenPosY = (canvas.height * this.parentGameObject.anchorY);
-        screenPosY += (this.parentGameObject.GetGlobalPos().y - (this.parentGameObject.height / 2));
+        if (this.isScreenSpace)
+        {
+            posX = (canvas.width * this.parentGameObject.anchorX);
+            posX += (this.parentGameObject.GetGlobalPos().x - (this.parentGameObject.width / 2));
 
-        // Setting font rendering details
-        canvasContext.textAlign = this.textAlign;
-        canvasContext.font = this.fontSize + 'px ' + this.font;
+            posY = (canvas.height * this.parentGameObject.anchorY);
+            posY += (this.parentGameObject.GetGlobalPos().y - (this.parentGameObject.height / 2));
+
+            // Setting font rendering details
+            canvasContext.textAlign = this.textAlign;
+            canvasContext.font = this.fontSize + 'px ' + this.font;
+            canvasContext.fillStyle = this.textColor;
+        }
+        else
+        {
+
+        }
 
         // Rendering text to the screen, only applies max width if it is above 0
         if (this.maxWidth != 0)
         {
-            canvasContext.fillText(this.text, screenPosX, screenPosY, this.maxWidth);
+            canvasContext.fillText(this.text, posX, posY, this.maxWidth);
         }
         else
         {
-            canvasContext.fillText(this.text, screenPosX, screenPosY);
+            canvasContext.fillText(this.text, posX, posY);
         }
     }
 }

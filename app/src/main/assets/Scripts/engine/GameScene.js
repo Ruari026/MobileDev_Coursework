@@ -148,20 +148,6 @@ class GameScene
     }
 }
 
-class MainMenuScene extends GameScene
-{
-    LoadScene()
-    {
-        this.sceneName = 'MainMenu';
-        console.info('Loading Scene: '.concat(this.sceneName));;
-
-        // Every scene needs a camera
-        var newCamera = new GameObject("Camera", this);
-        newCamera.zoom = 1;
-        this.sceneCamera = newCamera;
-    }
-}
-
 class GameOverScene extends GameScene
 {
     LoadScene()
