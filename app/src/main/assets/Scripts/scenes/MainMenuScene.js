@@ -131,8 +131,13 @@ class MainMenuScene extends GameScene
                     buttonRenderer.spriteWidth = 128;
                     startButton.AddRenderer(buttonRenderer, 10);
 
+                    var buttonAudio = new AudioSource(startButton);
+                    buttonAudio.filePath = "Audio/pop.wav";
+                    startButton.AddComponent(buttonAudio);
+
                     var buttonController = new ButtonComponent(startButton);
                     buttonController.targetRenderer = buttonRenderer;
+                    buttonController.targetAudio = buttonAudio;
                     buttonController.buttonBehaviour = StartGameButtonEvent;
                     startButton.AddComponent(buttonController);
 
@@ -166,8 +171,13 @@ class MainMenuScene extends GameScene
                     buttonRenderer.spriteWidth = 128;
                     instructionsButton.AddRenderer(buttonRenderer, 10);
 
+                    var buttonAudio = new AudioSource(instructionsButton);
+                    buttonAudio.filePath = "Audio/pop.wav";
+                    instructionsButton.AddComponent(buttonAudio);
+
                     var buttonController = new ButtonComponent(instructionsButton);
                     buttonController.targetRenderer = buttonRenderer;
+                    buttonController.targetAudio = buttonAudio;
                     buttonController.buttonBehaviour = OpenInstructionsButtonEvent;
                     instructionsButton.AddComponent(buttonController);
 
@@ -234,8 +244,13 @@ class MainMenuScene extends GameScene
                 buttonRenderer.spriteWidth = 128;
                 returnButton.AddRenderer(buttonRenderer, 10);
 
+                var buttonAudio = new AudioSource(returnButton);
+                buttonAudio.filePath = "Audio/pop.wav";
+                returnButton.AddComponent(buttonAudio);
+
                 var buttonController = new ButtonComponent(returnButton);
                 buttonController.targetRenderer = buttonRenderer;
+                buttonController.targetAudio = buttonAudio;
                 buttonController.buttonBehaviour = CloseInstructionsButtonEvent;
                 returnButton.AddComponent(buttonController);
 

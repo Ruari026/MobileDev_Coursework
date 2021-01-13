@@ -10,12 +10,14 @@ import android.os.Build;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class iSound
 {
     private Context ctx;
     private SoundPool sounds = null;
-    private int[] soundIDs = new int[2];
-    private String[] musicIDs = new String[1];
+    private Map<String, Integer> soundIDs = new HashMap<String, Integer>();
     private MediaPlayer music;
 
     iSound(final Context context)
@@ -39,7 +41,7 @@ public class iSound
             //Load sound using the asset file descriptor
             AssetFileDescriptor afd = ctx.getAssets().openFd("Audio/pop.wav");
             //store the id outputted by the sound pool in the sound effects array
-            soundIDs[0] = sounds.load(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength(), 0);
+            soundIDs.put("Audio/pop.wav", sounds.load(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength(), 0));
             afd.close();
         }
         catch (Exception e)
@@ -47,30 +49,29 @@ public class iSound
             e.printStackTrace();
         }
 
-        //load Music into sound pool
-        //musicIDs[0] = "music.mp3";
-
         music = new MediaPlayer();
     }
 
     @JavascriptInterface
-    public void PlaySound(int id)
+    public void PlaySound(String id)
     {
-        Log.i("", "iSound: Hello World");
-
         //sound pool is used for short sound clips
-        sounds.play(soundIDs[id], 1, 1, 0, 0, 1);
+        Integer sound = soundIDs.get(id);
+        if (sound != null)
+        {
+            sounds.play(sound, 1, 1, 0, 0, 1);
+        }
     }
 
     @JavascriptInterface
-    public void PlayMusic(int id)
+    public void PlayMusic(String id)
     {
         //media player is used for longer music tracks
         music.reset();//reset player as we are changing tracks
         try
         {
             //load the file and prepare the media player
-            AssetFileDescriptor afd = ctx.getAssets().openFd(musicIDs[id]);
+            AssetFileDescriptor afd = ctx.getAssets().openFd(id);
             music.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
             afd.close();
             music.setLooping(true); //we set our music track to loop

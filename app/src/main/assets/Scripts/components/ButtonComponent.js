@@ -3,6 +3,7 @@ class ButtonComponent extends Component
     componentName = "ButtonComponent";
 
     targetRenderer = null;
+    targetAudio = null;
 
     buttonDisabled = false;
     buttonPressed = false;
@@ -87,6 +88,11 @@ class ButtonComponent extends Component
         {
             if (this.buttonBehaviour != null && this.buttonPressed)
             {
+                if (this.targetAudio != null)
+                {
+                    this.targetAudio.PlaySound();
+                }
+
                 this.buttonBehaviour.OnClick(this.lastXPos, this.lastYPos);
             }
 

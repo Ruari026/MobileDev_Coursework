@@ -30,9 +30,18 @@ class MainMenuManager extends Component
     */
     OpenMainMenu()
     {
-        if (soundManager != null)
+        if (platformMobile)
         {
-            soundManager.PlaySound(0);
+            // Mobile Platform audio handled by android native app code
+            if (soundManager != null)
+            {
+                soundManager.PlaySound(0);
+            }
+        }
+        else
+        {
+            // Web Platform audio handled by web audio API
+
         }
 
         this.mainMenuParent.active = true;
@@ -41,10 +50,16 @@ class MainMenuManager extends Component
 
     OpenInstructions()
     {
-        if (soundManager != null)
+        if (platformMobile)
         {
-            console.info("Main Menu Manager: Say Hello");
-            soundManager.PlaySound(0);
+            if (soundManager != null)
+            {
+                soundManager.PlaySound(0);
+            }
+        }
+        else
+        {
+
         }
 
         this.mainMenuParent.active = false;

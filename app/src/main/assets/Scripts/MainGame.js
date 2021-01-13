@@ -9,7 +9,7 @@ var canvasY;
 
 // Game Managers
 var sceneManager = null;
-var soundManager;
+var soundManager; // Sound Manager set by the android native app code through a javascript interface
 
 // Time Management
 var deltaTime = 0;
