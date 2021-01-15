@@ -18,7 +18,7 @@ class PlayerFrog extends GameObject
         // Renderer
         var newRenderer = new SpriteRenderer(this);
         // General renderer details
-        newRenderer.filePath = 'Images/frog2.png';
+        newRenderer.filePath = 'Images/frog1.png';
         newRenderer.spriteWidth = 128;
         newRenderer.spriteHeight = 110;
         // Renderer animation details

@@ -323,10 +323,7 @@ var FireButtonEvent =
 
 var WindButtonEvent =
 {
-    targetScene : null,
-
-    windUIRenderer : null,
-    windLevel : 0,
+    sceneController : null,
 
     OnHold : function(inputX, inputY)
     {
@@ -335,21 +332,6 @@ var WindButtonEvent =
 
     OnClick : function(inputX, inputY)
     {
-        if (this.windUIRenderer != null)
-        {
-            this.windLevel--;
-            if (this.windLevel < 0)
-            {
-                this.windLevel = 8;
-            }
-
-            console.info('Changing Wind Speed: ' + (this.windLevel - 4));
-            this.targetScene.windSpeed = (-75 * (this.windLevel - 4));
-            this.windUIRenderer.spriteOffsetY = (this.windLevel * this.windUIRenderer.spriteHeight);
-        }
-        else
-        {
-            console.error("ERROR: Target Wind UI Renderer Has Not Been Assigned")
-        }
+        this.sceneController.GetComponent("GameManager").ChangeWindSpeed();
     }
 }

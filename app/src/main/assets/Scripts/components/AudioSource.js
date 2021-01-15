@@ -46,6 +46,18 @@ class AudioSource extends Component
     */
     PlaySound()
     {
+        if (this.isSFX)
+        {
+            this.PlaySFX();
+        }
+        else
+        {
+            this.PlayMusic();
+        }
+    }
+
+    PlaySFX()
+    {
         if (platformMobile)
         {
             // Audio Handled by Android Native Code

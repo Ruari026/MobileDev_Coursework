@@ -17,6 +17,8 @@ var maxDeltaTime = 0.02;
 var timeScale = 1.0;
 var prevTime = 0;
 
+var number = 0;
+
 window.onload = function()
 {
     Init();

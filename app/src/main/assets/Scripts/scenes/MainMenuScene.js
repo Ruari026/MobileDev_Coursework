@@ -28,7 +28,14 @@ class MainMenuScene extends GameScene
         */
         var sceneController = new GameObject("Main Menu Controller", this);
 
+        var backgroundMusic = new AudioSource(sceneController);
+        backgroundMusic.filePath = "Audio/Andrew_Codeman_-_01_-_Tired_traveler_on_the_way_to_home.ogg"
+        backgroundMusic.isSFX = false;
+        backgroundMusic.loop = true;
+        sceneController.AddComponent(backgroundMusic);
+
         var theController = new MainMenuManager(sceneController);
+        theController.gameMusic = backgroundMusic;
         sceneController.AddComponent(theController);
 
         this.sceneObjects.push(sceneController);
@@ -202,38 +209,254 @@ class MainMenuScene extends GameScene
             // Instructions Title
             {
                 // Background Layer
-                /*var menuTitle = new GameObject('Title Background Text', this);
-                menuTitle.posX = 0;
-                menuTitle.posY = -25;
-                menuTitle.anchorX = 0.5;
-                menuTitle.anchorY = 0.5;
-                var textRenderer = new TextRenderer(menuTitle);
-                textRenderer.text = "Battle Frogs";
-                textRenderer.fontSize = 75;
+                var controlsTitle = new GameObject('Title Background Text', this);
+                controlsTitle.posX = 0;
+                controlsTitle.posY = -150;
+                controlsTitle.anchorX = 0.5;
+                controlsTitle.anchorY = 0.5;
+                var textRenderer = new TextRenderer(controlsTitle);
+                textRenderer.text = "Controls";
+                textRenderer.fontSize = 45;
                 textRenderer.textColor = '#303030';
                 textRenderer.textAlign = 'center';
-                menuTitle.AddRenderer(textRenderer, 10);
-                instructionsParent.children.push(menuTitle);
+                controlsTitle.AddRenderer(textRenderer, 10);
+                instructionsParent.children.push(controlsTitle);
 
                 // Foreground Layer
-                menuTitle = new GameObject('Title Background Text', this);
-                menuTitle.posX = 4;
-                menuTitle.posY = -21;
-                menuTitle.anchorX = 0.5;
-                menuTitle.anchorY = 0.5;
-                textRenderer = new TextRenderer(menuTitle);
-                textRenderer.text = "Battle Frogs";
-                textRenderer.fontSize = 75;
+                controlsTitle = new GameObject('Title Background Text', this);
+                controlsTitle.posX = 4;
+                controlsTitle.posY = -146;
+                controlsTitle.anchorX = 0.5;
+                controlsTitle.anchorY = 0.5;
+                textRenderer = new TextRenderer(controlsTitle);
+                textRenderer.text = "Controls";
+                textRenderer.fontSize = 45;
                 textRenderer.textColor = '#E1E1E1';
                 textRenderer.textAlign = 'center';
-                menuTitle.AddRenderer(textRenderer, 10);
-                instructionsParent.children.push(menuTitle);*/
+                controlsTitle.AddRenderer(textRenderer, 10);
+                instructionsParent.children.push(controlsTitle);
+            }
+            // Jump Controls
+            {
+                var icon = new GameObject("Jump Icon")
+                icon.posX = -225;
+                icon.posY = -95;
+                icon.width = 75;
+                icon.height = 75;
+                icon.anchorX = 0.5;
+                icon.anchorY = 0.5;
+                var iconRenderer = new UIRenderer(icon);
+                iconRenderer.filePath = 'Images/arrow.png';
+                iconRenderer.spriteWidth = 64;
+                iconRenderer.spriteHeight = 64;
+                icon.AddRenderer(iconRenderer);
+                instructionsParent.children.push(icon);
+
+                var text = new GameObject("Jump Text (1)");
+                text.posX = -125;
+                text.posY = -70;
+                text.width = 75;
+                text.height = 75;
+                text.anchorX = 0.5;
+                text.anchorY = 0.5;
+                var textRenderer = new TextRenderer(text);
+                textRenderer.text = "To Jump";
+                textRenderer.fontSize = 24;
+                textRenderer.textColor = '#323232';
+                text.AddRenderer(textRenderer, 10);
+                instructionsParent.children.push(text);
+
+                text = new GameObject("Jump Text (2)");
+                text.posX = -122;
+                text.posY = -67;
+                text.width = 75;
+                text.height = 75;
+                text.anchorX = 0.5;
+                text.anchorY = 0.5;
+                textRenderer = new TextRenderer(text);
+                textRenderer.text = "To Jump";
+                textRenderer.fontSize = 24;
+                textRenderer.textColor = '#E1E1E1';
+                text.AddRenderer(textRenderer, 10);
+                instructionsParent.children.push(text);
+
+                text = new GameObject("Jump Text (3)");
+                text.posX = -125;
+                text.posY = -45;
+                text.width = 75;
+                text.height = 75;
+                text.anchorX = 0.5;
+                text.anchorY = 0.5;
+                textRenderer = new TextRenderer(text);
+                textRenderer.text = "(Holding Causes The Player To Jump Further)";
+                textRenderer.fontSize = 24;
+                textRenderer.textColor = '#323232';
+                text.AddRenderer(textRenderer, 10);
+                instructionsParent.children.push(text);
+
+                text = new GameObject("Jump Text (4)");
+                text.posX = -122;
+                text.posY = -42;
+                text.width = 75;
+                text.height = 75;
+                text.anchorX = 0.5;
+                text.anchorY = 0.5;
+                textRenderer = new TextRenderer(text);
+                textRenderer.text = "(Holding Causes The Player To Jump Further)";
+                textRenderer.fontSize = 24;
+                textRenderer.textColor = '#E1E1E1';
+                text.AddRenderer(textRenderer, 10);
+                instructionsParent.children.push(text);
+            }
+            // Fire Controls
+            {
+                var icon = new GameObject("Jump Icon")
+                icon.posX = -225;
+                icon.posY = 0;
+                icon.width = 75;
+                icon.height = 75;
+                icon.anchorX = 0.5;
+                icon.anchorY = 0.5;
+                var iconRenderer = new UIRenderer(icon);
+                iconRenderer.filePath = 'Images/fire.png';
+                iconRenderer.spriteWidth = 64;
+                iconRenderer.spriteHeight = 64;
+                icon.AddRenderer(iconRenderer);
+                instructionsParent.children.push(icon);
+
+                var text = new GameObject("Jump Text (1)");
+                text.posX = -125;
+                text.posY = 25;
+                text.width = 75;
+                text.height = 75;
+                text.anchorX = 0.5;
+                text.anchorY = 0.5;
+                var textRenderer = new TextRenderer(text);
+                textRenderer.text = "Fire A Projectile";
+                textRenderer.fontSize = 24;
+                textRenderer.textColor = '#323232';
+                text.AddRenderer(textRenderer, 10);
+                instructionsParent.children.push(text);
+
+                text = new GameObject("Jump Text (2)");
+                text.posX = -121;
+                text.posY = 28;
+                text.width = 75;
+                text.height = 75;
+                text.anchorX = 0.5;
+                text.anchorY = 0.5;
+                textRenderer = new TextRenderer(text);
+                textRenderer.text = "Fire A Projectile";
+                textRenderer.fontSize = 24;
+                textRenderer.textColor = '#E1E1E1';
+                text.AddRenderer(textRenderer, 10);
+                instructionsParent.children.push(text);
+
+                text = new GameObject("Jump Text (3)");
+                text.posX = -125;
+                text.posY = 50;
+                text.width = 75;
+                text.height = 75;
+                text.anchorX = 0.5;
+                text.anchorY = 0.5;
+                textRenderer = new TextRenderer(text);
+                textRenderer.text = "(Holding Causes The Projectile To Fire Further)";
+                textRenderer.fontSize = 24;
+                textRenderer.textColor = '#323232';
+                text.AddRenderer(textRenderer, 10);
+                instructionsParent.children.push(text);
+
+                text = new GameObject("Jump Text (4)");
+                text.posX = -122;
+                text.posY = 53;
+                text.width = 75;
+                text.height = 75;
+                text.anchorX = 0.5;
+                text.anchorY = 0.5;
+                textRenderer = new TextRenderer(text);
+                textRenderer.text = "(Holding Causes The Projectile To Fire Further)";
+                textRenderer.fontSize = 24;
+                textRenderer.textColor = '#E1E1E1';
+                text.AddRenderer(textRenderer, 10);
+                instructionsParent.children.push(text);
+            }
+            // Aim Controls
+            {
+                var icon = new GameObject("Jump Icon")
+                icon.posX = -232;
+                icon.posY = 95;
+                icon.width = 50;
+                icon.height = 50;
+                icon.anchorX = 0.5;
+                icon.anchorY = 0.5;
+                var iconRenderer = new UIRenderer(icon);
+                iconRenderer.filePath = 'Images/crosshairs.png';
+                iconRenderer.spriteWidth = 64;
+                iconRenderer.spriteHeight = 64;
+                icon.AddRenderer(iconRenderer);
+                instructionsParent.children.push(icon);
+
+                var text = new GameObject("Jump Text (1)");
+                text.posX = -125;
+                text.posY = 120;
+                text.width = 75;
+                text.height = 75;
+                text.anchorX = 0.5;
+                text.anchorY = 0.5;
+                var textRenderer = new TextRenderer(text);
+                textRenderer.text = "Aims Where The Player Jumps/ Fires";
+                textRenderer.fontSize = 24;
+                textRenderer.textColor = '#323232';
+                text.AddRenderer(textRenderer, 10);
+                instructionsParent.children.push(text);
+
+                text = new GameObject("Jump Text (2)");
+                text.posX = -122;
+                text.posY = 123;
+                text.width = 75;
+                text.height = 75;
+                text.anchorX = 0.5;
+                text.anchorY = 0.5;
+                textRenderer = new TextRenderer(text);
+                textRenderer.text = "Aims Where The Player Jumps/ Fires";
+                textRenderer.fontSize = 24;
+                textRenderer.textColor = '#E1E1E1';
+                text.AddRenderer(textRenderer, 10);
+                instructionsParent.children.push(text);
+
+                text = new GameObject("Jump Text (3)");
+                text.posX = -125;
+                text.posY = 145;
+                text.width = 75;
+                text.height = 75;
+                text.anchorX = 0.5;
+                text.anchorY = 0.5;
+                textRenderer = new TextRenderer(text);
+                textRenderer.text = "(Click And Drag To Change Direction)";
+                textRenderer.fontSize = 24;
+                textRenderer.textColor = '#323232';
+                text.AddRenderer(textRenderer, 10);
+                instructionsParent.children.push(text);
+
+                text = new GameObject("Jump Text (4)");
+                text.posX = -122;
+                text.posY = 148;
+                text.width = 75;
+                text.height = 75;
+                text.anchorX = 0.5;
+                text.anchorY = 0.5;
+                textRenderer = new TextRenderer(text);
+                textRenderer.text = "(Click And Drag To Change Direction)";
+                textRenderer.fontSize = 24;
+                textRenderer.textColor = '#E1E1E1';
+                text.AddRenderer(textRenderer, 10);
+                instructionsParent.children.push(text);
             }
             // Back Button
             {
                 var returnButton = new GameObject('Return Button', this);
                 returnButton.posX = 0;
-                returnButton.posY = 150;
+                returnButton.posY = 175;
                 returnButton.width = 150;
                 returnButton.height = 75;
                 returnButton.anchorX = 0.5;

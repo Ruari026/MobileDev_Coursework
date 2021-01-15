@@ -32,6 +32,9 @@ class GameManager extends Component
     currentPlayer = null;
     stateTimer = 0;
 
+    // Other Scene Variables
+    windspeedController = null;
+
 
     /*
     ====================================================================================================
@@ -155,6 +158,9 @@ class GameManager extends Component
 
                 // Set camera focus to the player's frog
                 this.sceneCamera.GetComponent("CameraController").cameraTarget = this.currentPlayer;
+
+                // Randomizes the windspeed value
+                this.ChangeWindSpeed();
             }
             break;
 
@@ -239,5 +245,18 @@ class GameManager extends Component
 
         // Changes the game's state to prevent any more actions from happening (turn end tracking is handled by the projectile itself)
         this.SwitchState(GameState.STATE_PROJECTILEFIRED);
+    }
+
+    ChangeWindSpeed()
+    {
+        currentScene.windLevel = Math.floor(Math.random() * 9);
+        if (currentScene.windLevel < 0)
+        {
+            currentScene.windLevel = 8;
+        }
+
+        console.info('Changing Wind Speed: ' + (currentScene.windLevel - 4));
+        currentScene.windSpeed = (-50 * (currentScene.windLevel - 4));
+        this.windspeedController.GetRenderer().spriteOffsetY = (currentScene.windLevel * this.windspeedController.GetRenderer().spriteHeight);
     }
 }

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.pm.ActivityInfo;
 //import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.webkit.WebView;
 import android.view.View;
 
@@ -13,7 +14,8 @@ public class MainActivity extends AppCompatActivity
     iSound iS;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
         View decorView = getWindow().getDecorView();
@@ -32,10 +34,12 @@ public class MainActivity extends AppCompatActivity
         iS = new iSound(getApplicationContext());
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        webView = (WebView)findViewById(R.id.webview1);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl("file:///android_asset/game.html");
-
-        webView.addJavascriptInterface(iS, "soundManager");
+        if (savedInstanceState != null)
+        {
+            webView = (WebView)findViewById(R.id.webview1);
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.loadUrl("file:///android_asset/game.html");
+            webView.addJavascriptInterface(iS, "soundManager");
+        }
     }
 }

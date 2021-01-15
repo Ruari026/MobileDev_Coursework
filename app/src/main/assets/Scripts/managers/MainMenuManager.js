@@ -5,6 +5,8 @@ class MainMenuManager extends Component
     mainMenuParent = null;
     instructionsParent = null;
 
+    gameMusic = null;
+
 
     /*
     ====================================================================================================
@@ -15,6 +17,9 @@ class MainMenuManager extends Component
     {
         // Ensures that the game starts with the main menu being shown
         this.OpenMainMenu();
+
+        // Playing the background music
+        this.gameMusic.PlaySound();
     }
 
     Update()

@@ -18,7 +18,7 @@ public class iSound
     private Context ctx;
     private SoundPool sounds = null;
     private Map<String, Integer> soundIDs = new HashMap<String, Integer>();
-    private MediaPlayer music;
+    private static MediaPlayer music;
 
     iSound(final Context context)
     {
@@ -49,7 +49,7 @@ public class iSound
             e.printStackTrace();
         }
 
-        music = new MediaPlayer();
+        iSound.music = new MediaPlayer();
     }
 
     @JavascriptInterface
@@ -67,20 +67,20 @@ public class iSound
     public void PlayMusic(String id)
     {
         //media player is used for longer music tracks
-        music.reset();//reset player as we are changing tracks
+        iSound.music.reset();//reset player as we are changing tracks
         try
         {
             //load the file and prepare the media player
             AssetFileDescriptor afd = ctx.getAssets().openFd(id);
-            music.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+            iSound.music.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
             afd.close();
-            music.setLooping(true); //we set our music track to loop
-            music.prepare();
+            iSound.music.setLooping(true); //we set our music track to loop
+            iSound.music.prepare();
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
-        music.start();
+        iSound.music.start();
     }
 }

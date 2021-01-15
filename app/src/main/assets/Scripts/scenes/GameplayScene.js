@@ -2,7 +2,8 @@ class GameplayScene extends GameScene
 {
     // Scene Specific Details
     sceneGravity = -400;
-    windSpeed = 0; //(75 * 4);
+    windLevel = 4;
+    windSpeed = 0;
 
     LoadScene()
     {
@@ -78,8 +79,8 @@ class GameplayScene extends GameScene
         Game Environment (Exists on the mid-ground layer)
         ====================================================================================================
         */
+        // Adding Middle Platforms
         {
-            // Adding Starting Platforms
             // Bottom Platform
             var newPlatform = new PlatformPrefab("Bottom Left Platform", this, 21, 5);
             //newPlatform.posX = -200;
@@ -103,6 +104,48 @@ class GameplayScene extends GameScene
             newPlatform.posX = 300;
             //newPlatform.posY = 150;
             this.sceneObjects.push(newPlatform);
+
+            // Middle Wall
+            newPlatform = new WallPrefab("Top Right Platform", this, 3, 9);
+            //newPlatform.posX = 300;
+            newPlatform.posY = -350;
+            this.sceneObjects.push(newPlatform);
+        }
+
+        // Adding Left Platforms
+        {
+            var newPlatform = new PlatformPrefab("Left Platform (1)", this, 11, 3);
+            newPlatform.posX = -550;
+            newPlatform.posY = -350;
+            this.sceneObjects.push(newPlatform);
+
+            newPlatform = new PlatformPrefab("Left Platform (2)", this, 11, 3);
+            newPlatform.posX = -550;
+            newPlatform.posY = -150;
+            this.sceneObjects.push(newPlatform);
+
+            newPlatform = new PlatformPrefab("Left Platform (3)", this, 11, 3);
+            newPlatform.posX = -550;
+            newPlatform.posY = 50;
+            this.sceneObjects.push(newPlatform);
+        }
+
+        // Adding Right Platforms
+        {
+            newPlatform = new PlatformPrefab("Right Platform (1)", this, 11, 3);
+            newPlatform.posX = 550;
+            newPlatform.posY = -350;
+            this.sceneObjects.push(newPlatform);
+
+            newPlatform = new PlatformPrefab("Right Platform (2)", this, 11, 3);
+            newPlatform.posX = 550;
+            newPlatform.posY = -150;
+            this.sceneObjects.push(newPlatform);
+
+            newPlatform = new PlatformPrefab("Right Platform (3)", this, 11, 3);
+            newPlatform.posX = 550;
+            newPlatform.posY = 50;
+            this.sceneObjects.push(newPlatform);
         }
 
 
@@ -115,12 +158,14 @@ class GameplayScene extends GameScene
         var frog1 = new PlayerFrog("Player 1", this);
         frog1.SetGlobalPos({x : -150, y : -75});
         // Ensuring that the player 1 frog start facing right
+        frog1.GetRenderer().filePath = 'Images/frog.png';
         frog1.GetRenderer().flipX = false;
         this.sceneObjects.push(frog1);
 
         var frog2 = new PlayerFrog("Player 2", this);
         frog2.SetGlobalPos({x : 150, y : -75});
         // Ensuring that the player 2 frog start facing left
+        frog2.GetRenderer().filePath = 'Images/frog2.png';
         frog2.GetRenderer().flipX = true;
         this.sceneObjects.push(frog2);
 
@@ -252,26 +297,6 @@ class GameplayScene extends GameScene
         */
         // UI Buttons
         {
-            // Pause Button
-            var pauseButton = new GameObject('Pause Button', this);
-            pauseButton.posX = 47.5;
-            pauseButton.posY = -47.5;
-            pauseButton.width = 75;
-            pauseButton.height = 75;
-            pauseButton.anchorX = 0;
-            pauseButton.anchorY = 1;
-
-            var buttonRenderer = new UIRenderer(pauseButton);
-            buttonRenderer.filePath = 'Images/pause.png';
-            pauseButton.AddRenderer(buttonRenderer, 10);
-
-            var buttonController = new ButtonComponent(pauseButton);
-            buttonController.targetRenderer = buttonRenderer;
-            //buttonController.buttonBehaviour = CameraButtonEvent;
-            pauseButton.AddComponent(buttonController);
-
-            this.sceneObjects.push(pauseButton);
-
             // Jump Button
             var jumpButton = new GameObject('Jump Button', this);
             jumpButton.posX = -142.5;
@@ -281,12 +306,17 @@ class GameplayScene extends GameScene
             jumpButton.anchorX = 1;
             jumpButton.anchorY = 1;
 
-            buttonRenderer = new UIRenderer(jumpButton);
+            var buttonRenderer = new UIRenderer(jumpButton);
             buttonRenderer.filePath = 'Images/arrow.png';
             jumpButton.AddRenderer(buttonRenderer, 10);
 
-            buttonController = new ButtonComponent(jumpButton);
+            var buttonAudio = new AudioSource(jumpButton);
+            buttonAudio.filePath = "Audio/pop.wav";
+            jumpButton.AddComponent(buttonAudio);
+
+            var buttonController = new ButtonComponent(jumpButton);
             buttonController.targetRenderer = buttonRenderer;
+            buttonController.targetAudio = buttonAudio;
             buttonController.buttonBehaviour = JumpButtonEvent;
             buttonController.buttonBehaviour.sceneController = sceneManager;
             jumpButton.AddComponent(buttonController);
@@ -306,8 +336,13 @@ class GameplayScene extends GameScene
             buttonRenderer.filePath = 'Images/fire.png';
             fireButton.AddRenderer(buttonRenderer, 10);
 
+            var buttonAudio = new AudioSource(fireButton);
+            buttonAudio.filePath = "Audio/pop.wav";
+            fireButton.AddComponent(buttonAudio);
+
             buttonController = new ButtonComponent(fireButton);
             buttonController.targetRenderer = buttonRenderer;
+            buttonController.targetAudio = buttonAudio;
             buttonController.buttonBehaviour = FireButtonEvent;
             buttonController.buttonBehaviour.sceneController = sceneManager;
             fireButton.AddComponent(buttonController);
@@ -332,10 +367,11 @@ class GameplayScene extends GameScene
             buttonController = new ButtonComponent(windButton);
             buttonController.targetRenderer = buttonRenderer;
             buttonController.buttonBehaviour = WindButtonEvent;
-            buttonController.buttonBehaviour.windUIRenderer = buttonRenderer;
+            buttonController.buttonBehaviour.sceneController = sceneManager;
             buttonController.buttonBehaviour.targetScene = this;
             windButton.AddComponent(buttonController);
 
+            managerComponent.windspeedController = windButton;
             this.sceneObjects.push(windButton);
 
 
