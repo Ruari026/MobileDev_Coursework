@@ -110,17 +110,21 @@ class ButtonComponent extends Component
 
     IsWithinRectScreen(inputX, inputY)
     {
-        var rectMin =
-        {
-            x : ((canvas.width * this.parentGameObject.anchorX) + this.parentGameObject.posX) - (this.parentGameObject.width / 2),
-            y : ((canvas.height * this.parentGameObject.anchorY) + this.parentGameObject.posY) - (this.parentGameObject.height / 2)
-        };
+        var rectMin = { x : 0, y : 0 };
+
+        rectMin.x = (canvas.width * this.parentGameObject.anchorX);
+        rectMin.x += (this.parentGameObject.posX * currentScene.sceneCamera.viewScale);
+        rectMin.x -= ((this.parentGameObject.width * currentScene.sceneCamera.viewScale) / 2);
+
+        rectMin.y = (canvas.height * this.parentGameObject.anchorY);
+        rectMin.y += (this.parentGameObject.posY * currentScene.sceneCamera.viewScale);
+        rectMin.y -= ((this.parentGameObject.height * currentScene.sceneCamera.viewScale) / 2)
 
         // Checking X Axis
-        if((inputX > rectMin.x) && (inputX < rectMin.x + this.parentGameObject.width))
+        if((inputX > rectMin.x) && (inputX < rectMin.x + (this.parentGameObject.width * currentScene.sceneCamera.viewScale)))
         {
             // Checking Y Axis
-            if((inputY > rectMin.y) && (inputY < rectMin.y + this.parentGameObject.height))
+            if((inputY > rectMin.y) && (inputY < rectMin.y + (this.parentGameObject.height * currentScene.sceneCamera.viewScale)))
             {
                 //console.info('Within Rect')
                 return true;

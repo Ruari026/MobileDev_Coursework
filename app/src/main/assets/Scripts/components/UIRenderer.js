@@ -26,11 +26,16 @@ class UIRenderer extends Component
     Draw(camera)
     {
         var screenPosX = (canvas.width * this.parentGameObject.anchorX);
-        screenPosX += (this.parentGameObject.GetGlobalPos().x - (this.parentGameObject.width / 2));
+        screenPosX += (this.parentGameObject.GetGlobalPos().x * currentScene.sceneCamera.viewScale);
+        screenPosX -= ((this.parentGameObject.width * currentScene.sceneCamera.viewScale) / 2);
 
         var screenPosY = (canvas.height * this.parentGameObject.anchorY);
-        screenPosY += (this.parentGameObject.GetGlobalPos().y - (this.parentGameObject.height / 2));
+        screenPosY += (this.parentGameObject.GetGlobalPos().y * currentScene.sceneCamera.viewScale);
+        screenPosY -= ((this.parentGameObject.height * currentScene.sceneCamera.viewScale) / 2);
 
-        canvasContext.drawImage(this.img, this.spriteOffsetX, this.spriteOffsetY, this.spriteWidth, this.spriteHeight, screenPosX, screenPosY, this.parentGameObject.width, this.parentGameObject.height);
+        var screenSizeX = this.parentGameObject.width * currentScene.sceneCamera.viewScale;
+        var screenSizeY = this.parentGameObject.height * currentScene.sceneCamera.viewScale;
+
+        canvasContext.drawImage(this.img, this.spriteOffsetX, this.spriteOffsetY, this.spriteWidth, this.spriteHeight, screenPosX, screenPosY, screenSizeX, screenSizeY);
     }
 }

@@ -30,14 +30,16 @@ class TextRenderer extends Component
         if (this.isScreenSpace)
         {
             posX = (canvas.width * this.parentGameObject.anchorX);
-            posX += (this.parentGameObject.GetGlobalPos().x - (this.parentGameObject.width / 2));
+            posX += (this.parentGameObject.GetGlobalPos().x * currentScene.sceneCamera.viewScale);
+            posX -= ((this.parentGameObject.width * currentScene.sceneCamera.viewScale) / 2);
 
             posY = (canvas.height * this.parentGameObject.anchorY);
-            posY += (this.parentGameObject.GetGlobalPos().y - (this.parentGameObject.height / 2));
+            posY += (this.parentGameObject.GetGlobalPos().y * currentScene.sceneCamera.viewScale);
+            posY -= ((this.parentGameObject.height * currentScene.sceneCamera.viewScale) / 2);
 
             // Setting font rendering details
             canvasContext.textAlign = this.textAlign;
-            canvasContext.font = this.fontSize + 'px ' + this.font;
+            canvasContext.font = (this.fontSize * currentScene.sceneCamera.viewScale) + 'px ' + this.font;
             canvasContext.fillStyle = this.textColor;
         }
         else
@@ -48,7 +50,7 @@ class TextRenderer extends Component
         // Rendering text to the screen, only applies max width if it is above 0
         if (this.maxWidth != 0)
         {
-            canvasContext.fillText(this.text, posX, posY, this.maxWidth);
+            canvasContext.fillText(this.text, posX, posY, (this.maxWidth * currentScene.sceneCamera.viewScale));
         }
         else
         {
