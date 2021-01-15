@@ -14,6 +14,9 @@ class SpriteRenderer extends Component
     spriteRotation = 0;
     rotationOffset = 0;
 
+    flipX = false;
+    flipY = false;
+
     img = new Image();
 
     // Sprite Animation Details
@@ -27,8 +30,15 @@ class SpriteRenderer extends Component
 
     debug = false;
 
+
+    /*
+    ====================================================================================================
+    Component Inherited Methods
+    ====================================================================================================
+    */
     Start()
     {
+        this.img = new Image();
         this.img.src = this.filePath;
         this.img.style.transform = 'rotate(90deg)'
     }
@@ -55,9 +65,29 @@ class SpriteRenderer extends Component
         // Getting the gameobject's position & size relative to the camera
         var spriteCenter =
         {
-            x : (this.parentGameObject.GetGlobalPos().x * camera.zoom) + canvasX,
-            y : (this.parentGameObject.GetGlobalPos().y * camera.zoom) + canvasY
+            x : ((this.parentGameObject.GetGlobalPos().x - camera.GetGlobalPos().x) * camera.viewScale),
+            y : ((this.parentGameObject.GetGlobalPos().y - camera.GetGlobalPos().y) * camera.viewScale)
         }
+
+        // Canvas Transformation for flipping sprites
+        if (this.flipX)
+        {
+            canvasContext.translate(canvas.width, 0)
+            canvasContext.scale(-1, 1);
+
+            spriteCenter.x *= -1;
+        }
+        if (this.flipY)
+        {
+            canvasContext.translate(0, canvas.height)
+            canvasContext.scale(1, -1);
+
+            spriteCenter.y *= -1;
+        }
+
+        // Adjusting for screen space coordinates
+        spriteCenter.x += canvasX;
+        spriteCenter.y += canvasY;
 
         /// Canvas Transformation for rotated sprites (Only Required if rotation is not 0)
         if (this.spriteRotation != 0)
@@ -68,20 +98,32 @@ class SpriteRenderer extends Component
         }
 
         // Adjusting position to set draw pos relative to sprite size
-        var screenPosX = spriteCenter.x - ((this.parentGameObject.width / 2) * camera.zoom);
-        var screenPosY = spriteCenter.y - ((this.parentGameObject.height / 2) * camera.zoom);
+        var screenPosX = spriteCenter.x - ((this.parentGameObject.width / 2) * camera.viewScale);
+        var screenPosY = spriteCenter.y - ((this.parentGameObject.height / 2) * camera.viewScale);
 
-        var screenSpaceWidth = this.parentGameObject.width * camera.zoom;
-        var screenSpaceHeight = this.parentGameObject.height * camera.zoom;
+        var screenSpaceWidth = this.parentGameObject.width * camera.viewScale;
+        var screenSpaceHeight = this.parentGameObject.height * camera.viewScale;
 
         canvasContext.drawImage(this.img, (this.spriteWidth * 0) + this.offsetX, (this.spriteHeight * this.currentFrame) + this.offsetY, this.spriteWidth, this.spriteHeight, screenPosX, screenPosY, screenSpaceWidth, screenSpaceHeight);
 
-        /// Canvas Transformation for rotated sprites (only required if rotation is not 0)
+        /// Resetting Canvas Transformation for rotated sprites (only required if rotation is not 0)
         if (this.spriteRotation != 0)
         {
             canvasContext.translate(spriteCenter.x, spriteCenter.y);
             canvasContext.rotate((-this.spriteRotation - this.rotationOffset) * Math.PI / 180);
             canvasContext.translate(-spriteCenter.x, -spriteCenter.y);
+        }
+
+        // Resetting Canvas Transformation for flipping sprites
+        if (this.flipX)
+        {
+            canvasContext.scale(-1, 1);
+            canvasContext.translate(-canvas.width, 0)
+        }
+        if (this.flipY)
+        {
+            canvasContext.scale(1, -1);
+            canvasContext.translate(0, -canvas.height)
         }
     }
 }

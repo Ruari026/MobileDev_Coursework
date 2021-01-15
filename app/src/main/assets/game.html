@@ -5,7 +5,6 @@
         <title>Mobile Development - Coursework</title>
         <link rel="stylesheet" type="text/css" href="css/gameStyles.css">
     </head>
-    <body>
         <!-- Environment for the game to be shown on -->
         <canvas id="gameCanvas"></canvas>
 
@@ -16,28 +15,38 @@
         <script src="Scripts/engine/Component.js"></script>
 
         <!-- Components -->
+        <script src="Scripts/components/CameraController.js"></script>
         <script src="Scripts/components/SpriteRenderer.js"></script>
         <script src="Scripts/components/UIRenderer.js"></script>
+        <script src="Scripts/components/TextRenderer.js"></script>
         <script src="Scripts/components/ButtonComponent.js"></script>
         <script src="Scripts/components/PhysicsMovement.js"></script>
         <script src="Scripts/components/PlayerController.js"></script>
+        <script src="Scripts/components/ProjectileController.js"></script>
         <script src="Scripts/components/BoxCollider.js"></script>
+        <script src="Scripts/components/AudioSource.js"></script>
+        <script src="Scripts/components/WaveAnimatorController.js"></script>
 
 
         <!-- Prefabs -->
         <script src="Scripts/gameobjects/prefabs/CameraPrefab.js"></script>
         <script src="Scripts/gameobjects/prefabs/PlayerFrog.js"></script>
+        <script src="Scripts/gameobjects/prefabs/ProjectilePrefab.js"></script>
         <script src="Scripts/gameobjects/prefabs/PlatformPrefab.js"></script>
         <script src="Scripts/gameobjects/prefabs/WallPrefab.js"></script>
 
         <!-- UI Elements -->
 
         <!-- Scenes -->
+        <script src="Scripts/scenes/MainMenuScene.js"></script>
         <script src="Scripts/scenes/GameplayScene.js"></script>
+        <script src="Scripts/scenes/GameOverScene.js"></script>
 
         <!-- Game Managers -->
         <script src="Scripts/managers/SceneManager.js"></script>
         <script src="Scripts/managers/InputManager.js"></script>
+        <script src="Scripts/managers/GameManager.js"></script>
+        <script src="Scripts/managers/MainMenuManager.js"></script>
 
         <script src="Scripts/MainGame.js"></script>
     </body>

@@ -3,7 +3,9 @@ class ButtonComponent extends Component
     componentName = "ButtonComponent";
 
     targetRenderer = null;
+    targetAudio = null;
 
+    buttonDisabled = false;
     buttonPressed = false;
     isScreenSpace = true;
 
@@ -12,9 +14,15 @@ class ButtonComponent extends Component
 
     buttonBehaviour = null;
 
+
+    /*
+    ====================================================================================================
+    Component Inherited Methods
+    ====================================================================================================
+    */
     Update()
     {
-        if (this.buttonPressed)
+        if (this.buttonPressed && !this.buttonDisabled)
         {
             this.buttonBehaviour.OnHold(this.lastXPos, this.lastYPos);
         }
@@ -22,6 +30,14 @@ class ButtonComponent extends Component
 
     Input(event)
     {
+        // If button is disabled then there is no point checking input
+        if (this.buttonDisabled)
+        {
+            return;
+        }
+
+        // Otherwise check if input is relevant to buttons
+        // Checks for both mobile input (screen touches) & web input (mouse clicks)
         if (event.type == 'touchstart' || event.type == 'mousedown')
         {
             // Storing input position (based on platform)
@@ -72,11 +88,16 @@ class ButtonComponent extends Component
         {
             if (this.buttonBehaviour != null && this.buttonPressed)
             {
+                if (this.targetAudio != null)
+                {
+                    this.targetAudio.PlaySound();
+                }
+
                 this.buttonBehaviour.OnClick(this.lastXPos, this.lastYPos);
             }
 
             // If the button was pressed return to normal state
-            //console.info('Button Released')
+            // console.info('Button Released')
             this.buttonPressed = false;
 
             // Updating Renderer
@@ -89,17 +110,21 @@ class ButtonComponent extends Component
 
     IsWithinRectScreen(inputX, inputY)
     {
-        var rectMin =
-        {
-            x : (((canvas.width * this.parentGameObject.anchorX) + this.parentGameObject.posX) - (this.parentGameObject.width / 2)),
-            y : (((canvas.height * this.parentGameObject.anchorY) + this.parentGameObject.posY) - (this.parentGameObject.height / 2))
-        };
+        var rectMin = { x : 0, y : 0 };
+
+        rectMin.x = (canvas.width * this.parentGameObject.anchorX);
+        rectMin.x += (this.parentGameObject.posX * currentScene.sceneCamera.viewScale);
+        rectMin.x -= ((this.parentGameObject.width * currentScene.sceneCamera.viewScale) / 2);
+
+        rectMin.y = (canvas.height * this.parentGameObject.anchorY);
+        rectMin.y += (this.parentGameObject.posY * currentScene.sceneCamera.viewScale);
+        rectMin.y -= ((this.parentGameObject.height * currentScene.sceneCamera.viewScale) / 2)
 
         // Checking X Axis
-        if((inputX > rectMin.x) && (inputX < rectMin.x + this.parentGameObject.width))
+        if((inputX > rectMin.x) && (inputX < rectMin.x + (this.parentGameObject.width * currentScene.sceneCamera.viewScale)))
         {
             // Checking Y Axis
-            if((inputY > rectMin.y) && (inputY < rectMin.y + this.parentGameObject.height))
+            if((inputY > rectMin.y) && (inputY < rectMin.y + (this.parentGameObject.height * currentScene.sceneCamera.viewScale)))
             {
                 //console.info('Within Rect')
                 return true;
@@ -113,40 +138,69 @@ class ButtonComponent extends Component
 
     IsWithinRectWorld(inputX, inputY)
     {
-        // Rect in world space
+        // Gameobject center relative to camera pos
+        var gameobjectCenter =
+        {
+            x : ((this.parentGameObject.GetGlobalPos().x - this.parentGameObject.parentScene.sceneCamera.GetGlobalPos().x) * this.parentGameObject.parentScene.sceneCamera.viewScale),
+            y : ((this.parentGameObject.GetGlobalPos().y - this.parentGameObject.parentScene.sceneCamera.GetGlobalPos().y) * this.parentGameObject.parentScene.sceneCamera.viewScale)
+        };
+        // Adjusting for screen space coordinates
+        gameobjectCenter.x += canvasX;
+        gameobjectCenter.y += canvasY;
+
+        // Rect in screen space
         var rectMin =
         {
-            x : (this.parentGameObject.GetGlobalPos().x - (this.parentGameObject.width / 2)) * this.parentGameObject.parentScene.sceneCamera.zoom,
-            y : (this.parentGameObject.GetGlobalPos().y - (this.parentGameObject.height / 2)) * this.parentGameObject.parentScene.sceneCamera.zoom
+            x : (gameobjectCenter.x - ((this.parentGameObject.width / 2) * this.parentGameObject.parentScene.sceneCamera.viewScale)),
+            y : (gameobjectCenter.y - ((this.parentGameObject.height / 2) * this.parentGameObject.parentScene.sceneCamera.viewScale))
         };
-        // Getting Screen Space Pos
-        rectMin.x += canvasX;
-        rectMin.y += canvasY;
+
+        //console.info('Input: ' + inputX + ', ' + inputY);
+        //console.info('Gameobject: ' + gameobjectCenter.x + ', ' + gameobjectCenter.y);
+        //console.info('Min: ' + rectMin.x + ', ' + rectMin.y);
 
         // Checking X Axis
-        if((inputX > rectMin.x) && (inputX < rectMin.x + (this.parentGameObject.width * this.parentGameObject.parentScene.sceneCamera.zoom)))
+        if((inputX > rectMin.x) && (inputX < rectMin.x + (this.parentGameObject.width * this.parentGameObject.parentScene.sceneCamera.viewScale)))
         {
             // Checking Y Axis
-            if((inputY > rectMin.y) && (inputY < rectMin.y + (this.parentGameObject.height * this.parentGameObject.parentScene.sceneCamera.zoom)))
+            if((inputY > rectMin.y) && (inputY < rectMin.y + (this.parentGameObject.height * this.parentGameObject.parentScene.sceneCamera.viewScale)))
             {
-                //console.info('Within Rect')
+                console.info('Within Rect')
                 return true;
             }
         }
 
         // Otherwise input was not within button rect
-        //console.info('Outside Rect')
+        console.info('Outside Rect')
         return false;
+    }
+
+    DisableButton(isDisabled)
+    {
+        if (isDisabled)
+        {
+            // Prevent input checking
+            this.buttonDisabled = isDisabled;
+
+            // Update button image
+        }
+        else
+        {
+            // Re-enable input checking
+            this.buttonDisabled = isDisabled;
+
+            // Reset button image
+        }
     }
 }
 
 
 /*
 ====================================================================================================
-Individual Button Behaviours
+Main Menu Button Behaviours
 ====================================================================================================
 */
-var CameraButtonEvent =
+var StartGameButtonEvent =
 {
     OnHold : function(inputX, inputY)
     {
@@ -155,34 +209,75 @@ var CameraButtonEvent =
 
     OnClick : function(inputX, inputY)
     {
-        console.info("Changing Camera View");
+        console.info("Starting Game");
+
+        ChangeScene("Gameplay");
     }
 }
 
+var OpenInstructionsButtonEvent =
+{
+    OnHold : function(inputX, inputY)
+    {
+
+    },
+
+    OnClick : function(inputX, inputY)
+    {
+        console.info("Opening Instructions");
+
+        // Gets the Main Menu Controller in the scene & opens the instructions UI
+        var mainMenuController = currentScene.GetSceneObject("Main Menu Controller").GetComponent("MainMenuManager");
+        mainMenuController.OpenInstructions();
+    }
+}
+
+var CloseInstructionsButtonEvent =
+{
+    OnHold : function(inputX, inputY)
+    {
+
+    },
+
+    OnClick : function(inputX, inputY)
+    {
+        console.info("Closing Instructions");
+
+        // Gets the Main Menu Controller in the scene & opens the main menu UI
+        var mainMenuController = currentScene.GetSceneObject("Main Menu Controller").GetComponent("MainMenuManager");
+        mainMenuController.OpenMainMenu();
+    }
+}
+
+
+/*
+====================================================================================================
+Gameplay Scene Button Behaviours
+====================================================================================================
+*/
 var JumpButtonEvent =
 {
-    targetFrog : null,
+    sceneController : null,
 
     OnHold : function(inputX, inputY)
     {
-        if (this.targetFrog != null)
+        if (this.sceneController != null)
         {
-            this.targetFrog.GetComponent("PlayerController").Charge();
+            //console.info("Frog Charging");
+            this.sceneController.GetComponent("GameManager").ChargeCurrentFrog();
         }
     },
 
     OnClick : function(inputX, inputY)
     {
-        if (this.targetFrog != null)
+        if (this.sceneController != null)
         {
             console.info("Frog Jumping");
-            this.targetFrog.GetComponent("PlayerController").Jump();
-            //this.targetPhysicsMovement.speedX += 2500;
-            //this.targetPhysicsMovement.speedY -= 2500;
+            this.sceneController.GetComponent("GameManager").JumpCurrentFrog();
         }
         else
         {
-            console.error("ERROR: Target Frog Has Not Been Assigned");
+            console.error("ERROR: Scene Manager Has Not Been Assigned");
         }
     }
 }
@@ -194,6 +289,7 @@ var TargetButtonEvent =
     OnHold : function(inputX, inputY)
     {
         //console.info("Changing Target Angle");
+        // Input position should be passed though as it's position in worldspace
         this.targetFrog.GetComponent("PlayerController").Aim(inputX, inputY);
     },
 
@@ -205,32 +301,33 @@ var TargetButtonEvent =
 
 var FireButtonEvent =
 {
+    sceneController : null,
+
     OnHold : function(inputX, inputY)
     {
-        if (this.targetFrog != null)
+        if (this.sceneController != null)
         {
-            this.targetFrog.GetComponent("PlayerController").Charge();
+            this.sceneController.GetComponent("GameManager").ChargeCurrentFrog();
         }
     },
 
     OnClick : function(inputX, inputY)
     {
-        if (this.targetFrog != null)
+        if (this.sceneController != null)
         {
             console.info("Frog Firing");
-            this.targetFrog.GetComponent("PlayerController").Fire();
+            this.sceneController.GetComponent("GameManager").FireCurrentFrog();
         }
         else
         {
-            console.error("ERROR: Target Frog Has Not Been Assigned");
+            console.error("ERROR: Scene Controller Has Not Been Assigned");
         }
     }
 }
 
 var WindButtonEvent =
 {
-    windUIRenderer : null,
-    windLevel : 0,
+    sceneController : null,
 
     OnHold : function(inputX, inputY)
     {
@@ -239,21 +336,27 @@ var WindButtonEvent =
 
     OnClick : function(inputX, inputY)
     {
-        if (this.windUIRenderer != null)
-        {
-            console.info('Changing Wind Speed');
+        this.sceneController.GetComponent("GameManager").ChangeWindSpeed();
+    }
+}
 
-            this.windLevel++;
-            if (this.windLevel >= 9)
-            {
-                this.windLevel = 0;
-            }
 
-            this.windUIRenderer.spriteOffsetY = (this.windLevel * this.windUIRenderer.spriteHeight);
-        }
-        else
-        {
-            console.error("ERROR: Target Wind UI Renderer Has Not Been Assigned")
-        }
+/*
+====================================================================================================
+Game Over Button Behaviours
+====================================================================================================
+*/
+var ReturnMenuButtonEvent =
+{
+    OnHold : function(inputX, inputY)
+    {
+
+    },
+
+    OnClick : function(inputX, inputY)
+    {
+        console.info("Returning to Main Menu");
+
+        ChangeScene("MainMenu");
     }
 }

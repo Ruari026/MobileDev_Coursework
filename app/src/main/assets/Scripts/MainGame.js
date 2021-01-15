@@ -9,11 +9,17 @@ var canvasY;
 
 // Game Managers
 var sceneManager = null;
+var soundManager; // Sound Manager set by the android native app code through a javascript interface
 
 // Time Management
 var deltaTime = 0;
 var maxDeltaTime = 0.02;
+var timeScale = 1.0;
 var prevTime = 0;
+
+// Other Persistant Game Data
+var musicPlaying = false;
+var winningPlayer = "Player 1";
 
 window.onload = function()
 {
@@ -71,7 +77,8 @@ function Init()
 
     // Starting Game Info
     prevTime = Date.now();
-    InitScenes();
+    // Ensures that the game starts in the main menu scene
+    ChangeScene("MainMenu");
 }
 
 function ResizeCanvas()
@@ -94,13 +101,14 @@ function Run()
     // Clearing Screen
     canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Calculating Game Info
+    // Calculating the time between frames
     deltaTime = ((Date.now() - this.prevTime) / 1000);
     if (deltaTime > maxDeltaTime)
     {
         deltaTime = maxDeltaTime;
     }
     prevTime = Date.now();
+    deltaTime = (deltaTime * timeScale);
 
     // Running Current Scene
     currentScene.UpdateScene();
