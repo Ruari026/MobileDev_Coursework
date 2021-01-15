@@ -29,7 +29,7 @@ class MainMenuScene extends GameScene
         var sceneController = new GameObject("Main Menu Controller", this);
 
         var backgroundMusic = new AudioSource(sceneController);
-        backgroundMusic.filePath = "Audio/Andrew_Codeman_-_01_-_Tired_traveler_on_the_way_to_home.ogg"
+        backgroundMusic.filePath = "Audio/Andrew_Codeman_-_01_-_Tired_traveler_on_the_way_to_home.mp3"
         backgroundMusic.isSFX = false;
         backgroundMusic.loop = true;
         sceneController.AddComponent(backgroundMusic);
@@ -96,12 +96,12 @@ class MainMenuScene extends GameScene
                 // Background Layer
                 var menuTitle = new GameObject('Title Background Text', this);
                 menuTitle.posX = 0;
-                menuTitle.posY = -25;
+                menuTitle.posY = 0;
                 menuTitle.anchorX = 0.5;
                 menuTitle.anchorY = 0.5;
                 var textRenderer = new TextRenderer(menuTitle);
                 textRenderer.text = "Battle Frogs";
-                textRenderer.fontSize = 75;
+                textRenderer.fontSize = 150;
                 textRenderer.textColor = '#303030';
                 textRenderer.textAlign = 'center';
                 menuTitle.AddRenderer(textRenderer, 10);
@@ -109,13 +109,13 @@ class MainMenuScene extends GameScene
 
                 // Foreground Layer
                 menuTitle = new GameObject('Title Background Text', this);
-                menuTitle.posX = 4;
-                menuTitle.posY = -21;
+                menuTitle.posX = 5;
+                menuTitle.posY = 5;
                 menuTitle.anchorX = 0.5;
                 menuTitle.anchorY = 0.5;
                 textRenderer = new TextRenderer(menuTitle);
                 textRenderer.text = "Battle Frogs";
-                textRenderer.fontSize = 75;
+                textRenderer.fontSize = 150;
                 textRenderer.textColor = '#E1E1E1';
                 textRenderer.textAlign = 'center';
                 menuTitle.AddRenderer(textRenderer, 10);
@@ -126,10 +126,10 @@ class MainMenuScene extends GameScene
                 // Start Game Button
                 {
                     var startButton = new GameObject('Start Button', this);
-                    startButton.posX = -125;
-                    startButton.posY = 75;
-                    startButton.width = 150;
-                    startButton.height = 75;
+                    startButton.posX = -187.5;
+                    startButton.posY = 112.5;
+                    startButton.width = 225;
+                    startButton.height = 112.5;
                     startButton.anchorX = 0.5;
                     startButton.anchorY = 0.5;
 
@@ -153,7 +153,7 @@ class MainMenuScene extends GameScene
                     childText.parentObject = startButton;
 
                     var textRenderer = new TextRenderer(childText);
-                    textRenderer.fontSize = 18;
+                    textRenderer.fontSize = 28;
                     textRenderer.text = "- Start Game -";
                     textRenderer.textAlign = 'center';
 
@@ -166,10 +166,10 @@ class MainMenuScene extends GameScene
                 // Instructions Button
                 {
                     var instructionsButton = new GameObject('Instructions Button', this);
-                    instructionsButton.posX = 125;
-                    instructionsButton.posY = 75;
-                    instructionsButton.width = 150;
-                    instructionsButton.height = 75;
+                    instructionsButton.posX = 187.5;
+                    instructionsButton.posY = 112.5;
+                    instructionsButton.width = 225;
+                    instructionsButton.height = 112.5;
                     instructionsButton.anchorX = 0.5;
                     instructionsButton.anchorY = 0.5;
 
@@ -193,7 +193,7 @@ class MainMenuScene extends GameScene
                     childText.parentObject = instructionsButton;
 
                     var textRenderer = new TextRenderer(childText);
-                    textRenderer.fontSize = 18;
+                    textRenderer.fontSize = 28;
                     textRenderer.text = "- Instructions -";
                     textRenderer.textAlign = 'center';
 
@@ -211,12 +211,12 @@ class MainMenuScene extends GameScene
                 // Background Layer
                 var controlsTitle = new GameObject('Title Background Text', this);
                 controlsTitle.posX = 0;
-                controlsTitle.posY = -150;
+                controlsTitle.posY = -225;
                 controlsTitle.anchorX = 0.5;
                 controlsTitle.anchorY = 0.5;
                 var textRenderer = new TextRenderer(controlsTitle);
                 textRenderer.text = "Controls";
-                textRenderer.fontSize = 45;
+                textRenderer.fontSize = 66;
                 textRenderer.textColor = '#303030';
                 textRenderer.textAlign = 'center';
                 controlsTitle.AddRenderer(textRenderer, 10);
@@ -224,13 +224,13 @@ class MainMenuScene extends GameScene
 
                 // Foreground Layer
                 controlsTitle = new GameObject('Title Background Text', this);
-                controlsTitle.posX = 4;
-                controlsTitle.posY = -146;
+                controlsTitle.posX = 5;
+                controlsTitle.posY = -220;
                 controlsTitle.anchorX = 0.5;
                 controlsTitle.anchorY = 0.5;
                 textRenderer = new TextRenderer(controlsTitle);
                 textRenderer.text = "Controls";
-                textRenderer.fontSize = 45;
+                textRenderer.fontSize = 66;
                 textRenderer.textColor = '#E1E1E1';
                 textRenderer.textAlign = 'center';
                 controlsTitle.AddRenderer(textRenderer, 10);
@@ -239,10 +239,10 @@ class MainMenuScene extends GameScene
             // Jump Controls
             {
                 var icon = new GameObject("Jump Icon")
-                icon.posX = -225;
-                icon.posY = -95;
-                icon.width = 75;
-                icon.height = 75;
+                icon.posX = -337.5;
+                icon.posY = -142.5;
+                icon.width = 112.5;
+                icon.height = 112.5;
                 icon.anchorX = 0.5;
                 icon.anchorY = 0.5;
                 var iconRenderer = new UIRenderer(icon);
@@ -253,57 +253,57 @@ class MainMenuScene extends GameScene
                 instructionsParent.children.push(icon);
 
                 var text = new GameObject("Jump Text (1)");
-                text.posX = -125;
-                text.posY = -70;
-                text.width = 75;
-                text.height = 75;
+                text.posX = -187.5;
+                text.posY = -105;
+                text.width = 112.5;
+                text.height = 112.5;
                 text.anchorX = 0.5;
                 text.anchorY = 0.5;
                 var textRenderer = new TextRenderer(text);
                 textRenderer.text = "To Jump";
-                textRenderer.fontSize = 24;
+                textRenderer.fontSize = 36;
                 textRenderer.textColor = '#323232';
                 text.AddRenderer(textRenderer, 10);
                 instructionsParent.children.push(text);
 
                 text = new GameObject("Jump Text (2)");
-                text.posX = -122;
-                text.posY = -67;
-                text.width = 75;
-                text.height = 75;
+                text.posX = -182.5;
+                text.posY = -100;
+                text.width = 112.5;
+                text.height = 112.5;
                 text.anchorX = 0.5;
                 text.anchorY = 0.5;
                 textRenderer = new TextRenderer(text);
                 textRenderer.text = "To Jump";
-                textRenderer.fontSize = 24;
+                textRenderer.fontSize = 36;
                 textRenderer.textColor = '#E1E1E1';
                 text.AddRenderer(textRenderer, 10);
                 instructionsParent.children.push(text);
 
                 text = new GameObject("Jump Text (3)");
-                text.posX = -125;
-                text.posY = -45;
-                text.width = 75;
-                text.height = 75;
+                text.posX = -187.5;
+                text.posY = -67.5;
+                text.width = 112.5;
+                text.height = 112.5;
                 text.anchorX = 0.5;
                 text.anchorY = 0.5;
                 textRenderer = new TextRenderer(text);
                 textRenderer.text = "(Holding Causes The Player To Jump Further)";
-                textRenderer.fontSize = 24;
+                textRenderer.fontSize = 36;
                 textRenderer.textColor = '#323232';
                 text.AddRenderer(textRenderer, 10);
                 instructionsParent.children.push(text);
 
                 text = new GameObject("Jump Text (4)");
-                text.posX = -122;
-                text.posY = -42;
-                text.width = 75;
-                text.height = 75;
+                text.posX = -182.5;
+                text.posY = -62.5;
+                text.width = 112.5;
+                text.height = 112.5;
                 text.anchorX = 0.5;
                 text.anchorY = 0.5;
                 textRenderer = new TextRenderer(text);
                 textRenderer.text = "(Holding Causes The Player To Jump Further)";
-                textRenderer.fontSize = 24;
+                textRenderer.fontSize = 36;
                 textRenderer.textColor = '#E1E1E1';
                 text.AddRenderer(textRenderer, 10);
                 instructionsParent.children.push(text);
@@ -311,10 +311,10 @@ class MainMenuScene extends GameScene
             // Fire Controls
             {
                 var icon = new GameObject("Jump Icon")
-                icon.posX = -225;
+                icon.posX = -337.5;
                 icon.posY = 0;
-                icon.width = 75;
-                icon.height = 75;
+                icon.width = 112.5;
+                icon.height = 112.5;
                 icon.anchorX = 0.5;
                 icon.anchorY = 0.5;
                 var iconRenderer = new UIRenderer(icon);
@@ -325,57 +325,57 @@ class MainMenuScene extends GameScene
                 instructionsParent.children.push(icon);
 
                 var text = new GameObject("Jump Text (1)");
-                text.posX = -125;
-                text.posY = 25;
-                text.width = 75;
-                text.height = 75;
+                text.posX = -187.5;
+                text.posY = 37.5;
+                text.width = 112.5;
+                text.height = 112.5;
                 text.anchorX = 0.5;
                 text.anchorY = 0.5;
                 var textRenderer = new TextRenderer(text);
                 textRenderer.text = "Fire A Projectile";
-                textRenderer.fontSize = 24;
+                textRenderer.fontSize = 36;
                 textRenderer.textColor = '#323232';
                 text.AddRenderer(textRenderer, 10);
                 instructionsParent.children.push(text);
 
                 text = new GameObject("Jump Text (2)");
-                text.posX = -121;
-                text.posY = 28;
-                text.width = 75;
-                text.height = 75;
+                text.posX = -182.5;
+                text.posY = 42.5;
+                text.width = 112.5;
+                text.height = 112.5;
                 text.anchorX = 0.5;
                 text.anchorY = 0.5;
                 textRenderer = new TextRenderer(text);
                 textRenderer.text = "Fire A Projectile";
-                textRenderer.fontSize = 24;
+                textRenderer.fontSize = 36;
                 textRenderer.textColor = '#E1E1E1';
                 text.AddRenderer(textRenderer, 10);
                 instructionsParent.children.push(text);
 
                 text = new GameObject("Jump Text (3)");
-                text.posX = -125;
-                text.posY = 50;
-                text.width = 75;
-                text.height = 75;
+                text.posX = -187.5;
+                text.posY = 75;
+                text.width = 112.5;
+                text.height = 112.5;
                 text.anchorX = 0.5;
                 text.anchorY = 0.5;
                 textRenderer = new TextRenderer(text);
                 textRenderer.text = "(Holding Causes The Projectile To Fire Further)";
-                textRenderer.fontSize = 24;
+                textRenderer.fontSize = 36;
                 textRenderer.textColor = '#323232';
                 text.AddRenderer(textRenderer, 10);
                 instructionsParent.children.push(text);
 
                 text = new GameObject("Jump Text (4)");
-                text.posX = -122;
-                text.posY = 53;
-                text.width = 75;
-                text.height = 75;
+                text.posX = -182.5;
+                text.posY = 80;
+                text.width = 112.5;
+                text.height = 112.5;
                 text.anchorX = 0.5;
                 text.anchorY = 0.5;
                 textRenderer = new TextRenderer(text);
                 textRenderer.text = "(Holding Causes The Projectile To Fire Further)";
-                textRenderer.fontSize = 24;
+                textRenderer.fontSize = 36;
                 textRenderer.textColor = '#E1E1E1';
                 text.AddRenderer(textRenderer, 10);
                 instructionsParent.children.push(text);
@@ -383,10 +383,10 @@ class MainMenuScene extends GameScene
             // Aim Controls
             {
                 var icon = new GameObject("Jump Icon")
-                icon.posX = -232;
-                icon.posY = 95;
-                icon.width = 50;
-                icon.height = 50;
+                icon.posX = -337.5;
+                icon.posY = 142.5;
+                icon.width = 75;
+                icon.height = 75;
                 icon.anchorX = 0.5;
                 icon.anchorY = 0.5;
                 var iconRenderer = new UIRenderer(icon);
@@ -397,57 +397,57 @@ class MainMenuScene extends GameScene
                 instructionsParent.children.push(icon);
 
                 var text = new GameObject("Jump Text (1)");
-                text.posX = -125;
-                text.posY = 120;
-                text.width = 75;
-                text.height = 75;
+                text.posX = -187.5;
+                text.posY = 180;
+                text.width = 112.5;
+                text.height = 112.5;
                 text.anchorX = 0.5;
                 text.anchorY = 0.5;
                 var textRenderer = new TextRenderer(text);
                 textRenderer.text = "Aims Where The Player Jumps/ Fires";
-                textRenderer.fontSize = 24;
+                textRenderer.fontSize = 36;
                 textRenderer.textColor = '#323232';
                 text.AddRenderer(textRenderer, 10);
                 instructionsParent.children.push(text);
 
                 text = new GameObject("Jump Text (2)");
-                text.posX = -122;
-                text.posY = 123;
-                text.width = 75;
-                text.height = 75;
+                text.posX = -182.5;
+                text.posY = 185;
+                text.width = 112.5;
+                text.height = 112.5;
                 text.anchorX = 0.5;
                 text.anchorY = 0.5;
                 textRenderer = new TextRenderer(text);
                 textRenderer.text = "Aims Where The Player Jumps/ Fires";
-                textRenderer.fontSize = 24;
+                textRenderer.fontSize = 36;
                 textRenderer.textColor = '#E1E1E1';
                 text.AddRenderer(textRenderer, 10);
                 instructionsParent.children.push(text);
 
                 text = new GameObject("Jump Text (3)");
-                text.posX = -125;
-                text.posY = 145;
-                text.width = 75;
-                text.height = 75;
+                text.posX = -187.5;
+                text.posY = 217.5;
+                text.width = 112.5;
+                text.height = 112.5;
                 text.anchorX = 0.5;
                 text.anchorY = 0.5;
                 textRenderer = new TextRenderer(text);
                 textRenderer.text = "(Click And Drag To Change Direction)";
-                textRenderer.fontSize = 24;
+                textRenderer.fontSize = 36;
                 textRenderer.textColor = '#323232';
                 text.AddRenderer(textRenderer, 10);
                 instructionsParent.children.push(text);
 
                 text = new GameObject("Jump Text (4)");
-                text.posX = -122;
-                text.posY = 148;
-                text.width = 75;
-                text.height = 75;
+                text.posX = -182.5;
+                text.posY = 222.5;
+                text.width = 112.5;
+                text.height = 112.5;
                 text.anchorX = 0.5;
                 text.anchorY = 0.5;
                 textRenderer = new TextRenderer(text);
                 textRenderer.text = "(Click And Drag To Change Direction)";
-                textRenderer.fontSize = 24;
+                textRenderer.fontSize = 36;
                 textRenderer.textColor = '#E1E1E1';
                 text.AddRenderer(textRenderer, 10);
                 instructionsParent.children.push(text);
@@ -456,9 +456,9 @@ class MainMenuScene extends GameScene
             {
                 var returnButton = new GameObject('Return Button', this);
                 returnButton.posX = 0;
-                returnButton.posY = 175;
-                returnButton.width = 150;
-                returnButton.height = 75;
+                returnButton.posY = 250;
+                returnButton.width = 225;
+                returnButton.height = 112.5;
                 returnButton.anchorX = 0.5;
                 returnButton.anchorY = 0.5;
 
@@ -478,11 +478,11 @@ class MainMenuScene extends GameScene
                 returnButton.AddComponent(buttonController);
 
                 var childText = new GameObject("Button Text", this);
-                childText.SetLocalPos({ x : 0, y : -1 });
+                childText.SetLocalPos({ x : 0, y : -2 });
                 childText.parentObject = returnButton;
 
                 var textRenderer = new TextRenderer(childText);
-                textRenderer.fontSize = 24;
+                textRenderer.fontSize = 36;
                 textRenderer.text = "- Return -";
                 textRenderer.textAlign = 'center';
 

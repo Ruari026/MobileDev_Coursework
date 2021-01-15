@@ -17,14 +17,16 @@ class MainMenuManager extends Component
     {
         // Ensures that the game starts with the main menu being shown
         this.OpenMainMenu();
-
-        // Playing the background music
-        this.gameMusic.PlaySound();
     }
 
     Update()
     {
-
+        if (!musicPlaying)
+        {
+            // Playing the background music
+            this.gameMusic.PlaySound();
+            musicPlaying = true;
+        }
     }
 
 

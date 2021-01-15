@@ -235,9 +235,18 @@ class PlayerController extends Component
         // If the player's power is less than 0 then the game should go to the game over screen
         if (this.playerHealth <= 0)
         {
-            // Game Manager handles game over transition animation
-
             // Tells the game data which player won the game
+            if (this.parentGameObject.gameObjectName == "Player 1")
+            {
+                winningPlayer = "Player 2";
+            }
+            else
+            {
+                winningPlayer = "Player 1";
+            }
+
+            // Game moves to the game over scene
+            ChangeScene("GameOver");
         }
     }
 }

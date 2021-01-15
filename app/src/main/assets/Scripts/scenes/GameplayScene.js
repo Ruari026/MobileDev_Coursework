@@ -299,10 +299,10 @@ class GameplayScene extends GameScene
         {
             // Jump Button
             var jumpButton = new GameObject('Jump Button', this);
-            jumpButton.posX = -142.5;
-            jumpButton.posY = -47.5;
-            jumpButton.width = 75;
-            jumpButton.height = 75;
+            jumpButton.posX = -215;
+            jumpButton.posY = -72.5;
+            jumpButton.width = 112.5;
+            jumpButton.height = 112.5;
             jumpButton.anchorX = 1;
             jumpButton.anchorY = 1;
 
@@ -325,10 +325,10 @@ class GameplayScene extends GameScene
 
             // Fire Button
             var fireButton = new GameObject('Fire Button', this);
-            fireButton.posX = -47.5;
-            fireButton.posY = -47.5;
-            fireButton.width = 75;
-            fireButton.height = 75;
+            fireButton.posX = -72.5;
+            fireButton.posY = -72.5;
+            fireButton.width = 112.5;
+            fireButton.height = 112.5;
             fireButton.anchorX = 1;
             fireButton.anchorY = 1;
 
@@ -352,9 +352,9 @@ class GameplayScene extends GameScene
             // WindSpeed Button
             var windButton = new GameObject('Wind Button', this);
             windButton.posX = 0;
-            windButton.posY = 22.5;
-            windButton.width = 100;
-            windButton.height = 25;
+            windButton.posY = 35;
+            windButton.width = 150;
+            windButton.height = 37.5;
             windButton.anchorX = 0.5;
             windButton.anchorY = 0;
 
@@ -385,14 +385,14 @@ class GameplayScene extends GameScene
             // Turn Timer
             var timerText = new GameObject('Timer Text', this);
             timerText.posX = 0;
-            timerText.posY = 75;
+            timerText.posY = 112.5;
             timerText.anchorX = 0.5;
             timerText.anchorY = 0;
 
             textRenderer = new TextRenderer(timerText);
             textRenderer.text = "- XX -";
             textRenderer.textAlign = 'center';
-            textRenderer.fontSize = 36;
+            textRenderer.fontSize = 55;
             timerText.AddRenderer(textRenderer, 10);
 
             managerComponent.timerText = textRenderer;
@@ -403,56 +403,55 @@ class GameplayScene extends GameScene
             {
                 // Name Text
                 var playerText = new GameObject('Player Name Text', this);
-                playerText.posX = 25;
-                playerText.posY = 50;
+                playerText.posX = 37.5;
+                playerText.posY = 75;
                 playerText.anchorX = 0;
                 playerText.anchorY = 0;
                 var textRenderer = new TextRenderer(playerText);
                 textRenderer.text = "Player 1";
-                textRenderer.fontSize = 18;
+                textRenderer.fontSize = 28;
                 playerText.AddRenderer(textRenderer, 10);
                 this.sceneObjects.push(playerText);
 
                 // Health Text
                 playerText = new GameObject('Player Health Text', this);
-                playerText.posX = 25;
-                playerText.posY = 87.5;
+                playerText.posX = 37.5;
+                playerText.posY = 131.25;
                 playerText.anchorX = 0;
                 playerText.anchorY = 0;
                 textRenderer = new TextRenderer(playerText);
                 textRenderer.text = "HP: XXX";
-                textRenderer.fontSize = 18;
+                textRenderer.fontSize = 28;
                 playerText.AddRenderer(textRenderer, 10);
                 this.sceneObjects.push(playerText);
                 frog1.GetComponent("PlayerController").playerHealthUI = textRenderer;
             }
 
-
             // Player 2 Texts
             {
                 // Name Text
                 var playerText = new GameObject('Player Name Text', this);
-                playerText.posX = -25;
-                playerText.posY = 50;
+                playerText.posX = -37.5;
+                playerText.posY = 75;
                 playerText.anchorX = 1;
                 playerText.anchorY = 0;
                 textRenderer = new TextRenderer(playerText);
                 textRenderer.text = "Player 2";
                 textRenderer.textAlign = 'end';
-                textRenderer.fontSize = 18;
+                textRenderer.fontSize = 28;
                 playerText.AddRenderer(textRenderer, 10);
                 this.sceneObjects.push(playerText);
 
                 // Health Text
                 playerText = new GameObject('Player Health Text', this);
-                playerText.posX = -25;
-                playerText.posY = 87.5;
+                playerText.posX = -37.5;
+                playerText.posY = 131.25;
                 playerText.anchorX = 1;
                 playerText.anchorY = 0;
                 textRenderer = new TextRenderer(playerText);
                 textRenderer.text = "HP: XXX";
                 textRenderer.textAlign = 'end';
-                textRenderer.fontSize = 18;
+                textRenderer.fontSize = 28;
                 playerText.AddRenderer(textRenderer, 10);
                 this.sceneObjects.push(playerText);
                 frog2.GetComponent("PlayerController").playerHealthUI = textRenderer;

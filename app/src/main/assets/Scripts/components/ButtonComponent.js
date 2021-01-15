@@ -339,3 +339,24 @@ var WindButtonEvent =
         this.sceneController.GetComponent("GameManager").ChangeWindSpeed();
     }
 }
+
+
+/*
+====================================================================================================
+Game Over Button Behaviours
+====================================================================================================
+*/
+var ReturnMenuButtonEvent =
+{
+    OnHold : function(inputX, inputY)
+    {
+
+    },
+
+    OnClick : function(inputX, inputY)
+    {
+        console.info("Returning to Main Menu");
+
+        ChangeScene("MainMenu");
+    }
+}
